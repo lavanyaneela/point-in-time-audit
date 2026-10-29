@@ -97,5 +97,5 @@
     }
   ],
   "referee": "both engines built every sweep point; disagreement refuses the sweep",
-  "residual_note": "the gap at zero incident delay is the backdated correction leak, which arrives on its own clock and which no ingestion speedup removes"
+  "residual_note": "the gap at zero incident delay is the arrival leak the incident knob cannot touch: the backdated corrections and the other delayed dimensions the sweep holds fixed; the sweep does not decompose this residual by source"
 }

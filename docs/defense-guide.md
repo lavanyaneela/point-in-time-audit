@@ -25,7 +25,7 @@ corpus leak cases, and the missing share is named, not hidden.
 | an AUC of 0.8913 for the naive pipeline | E1, same splits; the honest AUC is 0.7668 and the latest-value join scores 0.9457 |
 | worst offender is incident_count_90d, 10.47 points by itself | E2: swap that one honest column for its naive column on an otherwise honest table |
 | parts sum to 20.8 against the 12.45 joint gap | E2: the difference is interaction between redundant incident features, published, not normalised away |
-| 2.21 points remain at zero incident delay | E4: the backdated corrections and the slower status and assessment tails leak on their own clocks; only the arrival predicate removes them |
+| 2.21 points remain at zero incident delay | E4: the arrival leak the incident knob cannot touch, held fixed by the sweep and not decomposed by source; only the arrival predicate removes it |
 | names 17 of the 24 leak cases, 100.0% of direct sites | E3 over the 36 corpus cases with declared ground truth; misses 7 cases across the 3 leak classes it structurally cannot see |
 | flags 3 of the 10 cases whose ground truth is clean | E3; every flag a wrapped correct predicate; the 7 bare-predicate clean cases show 0 false positives, a zero bounded only below 34.8% at 95 percent confidence |
 | crossover sits at 50.0% | the pivot arithmetic at the measured direct catch rate; past 50.0% of temporal joins routed through intermediates, the blind share dominates |

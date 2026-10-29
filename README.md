@@ -61,7 +61,7 @@ Every feature table is built twice, by a Spark DataFrame job in local mode and b
 
 ### Which features leak (E2)
 
-One honest column at a time is swapped for its naive counterpart on an otherwise point-in-time table. Of the 7 features, 3 of them leak materially; the worst offender is incident_count_90d, worth 10.47 points by itself. The clean features contribute nothing, which is what the mechanism predicts: activity arrives in hours, so admitting its unarrived rows buys no information about the label.
+One honest column at a time is swapped for its naive counterpart on an otherwise point-in-time table. Of the 7 features, 3 of them leak materially; the worst offender is incident_count_90d, worth 10.47 points by itself. The fast features buy nothing, and together slightly less than nothing, which is what the mechanism predicts: activity arrives in hours, so admitting its unarrived rows adds no label information, and the four swaps land within about a point of zero on either side of it.
 
 | Feature | Fabricated AUC, points | Mechanism |
 | --- | --- | --- |
@@ -81,7 +81,7 @@ The three leaking features alone sum to 22.13 points; the signed parts sum to 20
 | 30 (the committed default) | 12.45 |
 | 60 | 15.26 |
 
-The gap climbs to 15.26 points at a 60 day median. The uncomfortable row is the first one: with incident delay removed entirely, 2.21 points remain, carried by the backdated corrections above all, with the slower status and assessment arrival tails behind them; none of that is touched by the incident knob. Faster ingestion shrinks the leak; only the arrival predicate removes it. Both engines built every sweep point under the referee rule.
+The gap climbs to 15.26 points at a 60 day median. The uncomfortable row is the first one: with incident delay removed entirely, 2.21 points remain. That residual is the arrival leak the incident knob cannot touch, the backdated corrections and the other delayed dimensions the sweep holds fixed, and the sweep does not decompose it by source. Faster ingestion shrinks the leak; only the arrival predicate removes it. Both engines built every sweep point under the referee rule.
 
 ## Half two: the gate, with its miss rate on the label
 

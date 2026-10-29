@@ -6,9 +6,12 @@ re-measures the fact-only gap at each, with both engines building every
 point so no sweep number rests on one engine's opinion.
 
 The zero endpoint is the interesting one: with incident delay removed, the
-gap does not go to zero, because the backdated corrections arrive on their
-own clock. Whatever remains at zero is the leak class no ingestion speedup
-removes, which is the argument for the arrival predicate over faster pipes.
+gap does not go to zero. What remains is the arrival leak the incident
+knob cannot touch, the backdated corrections and the other delayed
+dimensions the sweep holds fixed, and the sweep does not decompose that
+residual by source. Whatever its mix, it is the share no ingestion
+speedup removes, which is the argument for the arrival predicate over
+faster pipes.
 """
 
 from __future__ import annotations
@@ -80,8 +83,10 @@ def main() -> int:
             p["gap_pp_mean"] for p in points if p["incident_delay_median_days"] == 30.0
         ),
         "residual_note": (
-            "the gap at zero incident delay is the backdated correction leak, "
-            "which arrives on its own clock and which no ingestion speedup removes"
+            "the gap at zero incident delay is the arrival leak the incident knob "
+            "cannot touch: the backdated corrections and the other delayed "
+            "dimensions the sweep holds fixed; the sweep does not decompose this "
+            "residual by source"
         ),
         "referee": "both engines built every sweep point; disagreement refuses the sweep",
     }
