@@ -16,6 +16,7 @@ test:
 # Re-measures every published figure and fails if any document disagrees.
 receipts:
 	$(PYTHON) tools/collect_metrics.py
+	$(PYTHON) tools/render_report.py
 	$(PYTHON) tools/check_numbers.py
 	$(PYTHON) tools/check_durations.py
 

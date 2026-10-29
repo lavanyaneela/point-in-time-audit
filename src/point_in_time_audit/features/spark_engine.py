@@ -27,7 +27,7 @@ import pandas as pd
 from pyspark.sql import DataFrame, SparkSession, Window
 from pyspark.sql import functions as F
 
-from .spec import FEATURES, FEATURE_NAMES
+from .spec import FEATURE_NAMES, FEATURES
 
 ROUND_DECIMALS = 6
 

@@ -193,7 +193,7 @@
     "seeds": 5,
     "sql_files_total": 28,
     "sum_of_parts_pp": 20.8,
-    "tests_total": 233,
+    "tests_total": 237,
     "undetectable_classes_total": 3,
     "undetected_cases": 7,
     "worst_feature_name": "incident_count_90d",

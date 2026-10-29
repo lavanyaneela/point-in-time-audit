@@ -12,8 +12,8 @@ the experiment refuses to publish if they disagree on a single value.
 from __future__ import annotations
 
 import numpy as np
-from common import configure, load_default_fixture, log_fields, write_result
 
+from common import configure, load_default_fixture, log_fields, write_result
 from point_in_time_audit.features.spark_engine import get_spark
 from point_in_time_audit.measurement import build_all_policies, measure_leak
 

@@ -29,7 +29,7 @@ static analysis stops being the right tool.
 | 0 false positives on the 7 clean cases | E3; priced honestly as a bound only below 34.8% at 95 percent confidence |
 | crossover sits at 50.0% | the pivot arithmetic at the measured direct catch rate; past 50.0% of temporal joins routed through intermediates, the blind share dominates |
 | 3 of 3 dialects agree | E5: Spark executed for real locally, Snowflake and BigQuery transpiled onto DuckDB, value for value against the reference |
-| 233 tests, 98.7% line coverage | the junit XML and coverage JSON, collected counts, coverage floored not rounded |
+| 237 tests, 98.7% line coverage | the junit XML and coverage JSON, collected counts, coverage floored not rounded |
 
 ## Questions you should expect, with the honest answers
 

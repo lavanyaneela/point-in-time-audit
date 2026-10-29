@@ -14,8 +14,8 @@ removes, which is the argument for the arrival predicate over faster pipes.
 from __future__ import annotations
 
 import numpy as np
-from common import configure, log_fields, write_result
 
+from common import configure, log_fields, write_result
 from point_in_time_audit.config import DelayConfig, GeneratorConfig
 from point_in_time_audit.eventlog import materialize_times
 from point_in_time_audit.features.duckdb_engine import build_features_duckdb

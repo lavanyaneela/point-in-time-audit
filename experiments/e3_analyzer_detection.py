@@ -17,8 +17,8 @@ direct catch rate.
 from __future__ import annotations
 
 import yaml
-from common import REPO, configure, log_fields, write_result
 
+from common import REPO, configure, log_fields, write_result
 from point_in_time_audit.audit.dag_analyzer import analyze_dag_path
 from point_in_time_audit.audit.pivot import crossover_intermediate_share
 from point_in_time_audit.audit.schema_registry import load_registry

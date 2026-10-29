@@ -10,7 +10,6 @@ because hiding it is how attribution tables lie politely.
 from __future__ import annotations
 
 from common import configure, load_default_fixture, log_fields, write_result
-
 from point_in_time_audit.measurement import (
     build_all_policies,
     feature_attribution,

@@ -18,7 +18,7 @@ The pipeline that passes code review filters on the business timestamp and ignor
 
 The gate that guards against this catches 72.0% of the corpus built to test it: 100.0% of direct joins, and none of the leaks that reach the join site through an intermediate table, a CTE, or a sensor that waits on the wrong signal. Those are 3 leak classes the analyzer structurally cannot see, they leave 7 leak cases invisible out of the 25 leak cases in ground truth, and they are published here rather than discovered by a reviewer, because a gate that does not state its own blind spots is a linter wearing a hard hat.
 
-Credibility line: 233 tests, 98.7% line coverage (the live Kafka consumer runs only against a real broker in an optional CI job and is excluded from the denominator), every figure in this document re-measured by `make verify` and cross-checked against the prose by `tools/check_numbers.py`, which CI proves can fail by breaking a figure on purpose.
+Credibility line: 237 tests, 98.7% line coverage (the live Kafka consumer runs only against a real broker in an optional CI job and is excluded from the denominator), every figure in this document re-measured by `make verify` and cross-checked against the prose by `tools/check_numbers.py`, which CI proves can fail by breaking a figure on purpose.
 
 ## Quickstart
 
@@ -28,7 +28,7 @@ Prerequisites: Python 3.11 or newer and a Java runtime for Spark local mode. No 
 git clone https://github.com/GITHUB_USERNAME/point-in-time-audit
 cd point-in-time-audit
 pip install -e ".[dev]"
-make verify        # lint + 233 tests + every number re-measured
+make verify        # lint + 237 tests + every number re-measured
 make demo          # the audit against this repository's own SQL
 pit-audit measure --fixture fixtures/event_log   # the headline number, exit 1
 ```

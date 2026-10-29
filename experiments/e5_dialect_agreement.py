@@ -21,8 +21,8 @@ import duckdb
 import numpy as np
 import pandas as pd
 import sqlglot
-from common import REPO, configure, load_default_fixture, log_fields, write_result
 
+from common import REPO, configure, load_default_fixture, log_fields, write_result
 from point_in_time_audit.features.duckdb_engine import build_features_duckdb
 from point_in_time_audit.features.spark_engine import get_spark
 from point_in_time_audit.features.spec import FEATURE_NAMES
