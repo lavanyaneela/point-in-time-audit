@@ -18,7 +18,7 @@ The pipeline that passes code review filters on the business timestamp and ignor
 
 The gate that guards against this catches 70.8% of the corpus leak cases: 100.0% of direct sites, every direct join and the unsensored schedule, and none of the leaks that reach a join site through an intermediate table, a CTE, or a sensor that waits on the wrong signal. Those are 3 leak classes the analyzer structurally cannot see, they leave 7 leak cases invisible out of the 24 leak cases in ground truth, and they are published here rather than discovered by a reviewer, because a gate that does not state its own blind spots is a linter making a safety claim.
 
-Credibility line: 237 tests collected (two of them run only under the optional broker and loader services), 98.7% line coverage (the live Kafka consumer runs only against a real broker in an optional CI job and is excluded from the denominator), every figure in this document re-measured by `make verify` and cross-checked against the prose by `tools/check_numbers.py`, which CI proves can fail by breaking a figure on purpose.
+Credibility line: 239 tests collected (two of them run only under the optional broker and loader services), 98.7% line coverage (the live Kafka consumer runs only against a real broker in an optional CI job and is excluded from the denominator), every figure in this document re-measured by `make verify` and cross-checked against the prose by `tools/check_numbers.py`, which CI proves can fail by breaking a figure on purpose.
 
 ## Quickstart
 
@@ -29,7 +29,7 @@ git clone https://github.com/GITHUB_USERNAME/point-in-time-audit
 cd point-in-time-audit
 pip install -e ".[dev]"
 make set-handle HANDLE=your-github-handle   # badges ship as placeholders
-make verify        # lint + 237 tests + every number re-measured
+make verify        # lint + 239 tests + every number re-measured
 make demo          # the audit against this repository's own SQL
 pit-audit measure --fixture fixtures/event_log   # the headline number, exit 1
 ```
@@ -70,7 +70,7 @@ One honest column at a time is swapped for its naive counterpart on an otherwise
 | status_risky | +3.95 | corrections written weeks later with backdated fact times |
 | the four fast-arriving features | together subtract 1.33 points | arrive in hours to days; each within about a point of zero |
 
-The three leaking features alone sum to 22.13 points; the signed parts sum to 20.8 points once the fast features' small negatives are included; the joint gap is 12.45. The gap between any of those is interaction, because the leaking features are redundant evidence about the same incidents, and all three numbers are published instead of one being normalised away.
+The three leaking features alone sum to 22.13 points; the signed parts sum to 20.8 points once the fast features' small negatives are included; the joint gap of 12.45 is what one model actually recovers. The gap between any of those is interaction, because the leaking features are redundant evidence about the same incidents, and all three numbers are published instead of one being normalised away.
 
 ### How much the delay matters (E4)
 

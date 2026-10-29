@@ -30,7 +30,7 @@ corpus leak cases, and the missing share is named, not hidden.
 | flags 3 of the 10 cases whose ground truth is clean | E3; every flag a wrapped correct predicate; the 7 bare-predicate clean cases show 0 false positives, a zero bounded only below 34.8% at 95 percent confidence |
 | crossover sits at 50.0% | the pivot arithmetic at the measured direct catch rate; past 50.0% of temporal joins routed through intermediates, the blind share dominates |
 | 3 of 3 dialects agree | E5: Spark executed for real locally, Snowflake and BigQuery transpiled onto DuckDB, value for value against the reference |
-| 237 tests, 98.7% line coverage | the junit XML and coverage JSON, collected counts, coverage floored not rounded |
+| 239 tests, 98.7% line coverage | the junit XML and coverage JSON, collected counts, coverage floored not rounded |
 
 ## Questions you should expect, with the honest answers
 

@@ -220,6 +220,16 @@ def exact_binomial_upper_pct(successes: int, trials: int, confidence: float = 0.
 
 
 def main() -> int:
+    # The suite the collector runs includes a sync test holding the
+    # committed anchors to this module's ANCHORS, so an anchor edit must
+    # land in the file before the suite can pass: refresh the anchors in
+    # place first, then re-measure everything and overwrite in full.
+    if OUT.exists():
+        current = json.loads(OUT.read_text(encoding="utf-8"))
+        if current.get("anchors") != ANCHORS:
+            current["anchors"] = ANCHORS
+            OUT.write_text(json.dumps(current, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
     collected, coverage_pct = run_suite()
     run_experiments()
 

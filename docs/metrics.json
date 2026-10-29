@@ -16,6 +16,12 @@
     "clean_cases": [
       "{} clean cases"
     ],
+    "clean_expectation_cases": [
+      "{} cases whose ground"
+    ],
+    "clean_expectation_flags": [
+      "flags {} of them"
+    ],
     "clean_false_positives": [
       "{} false positives"
     ],
@@ -25,6 +31,9 @@
     ],
     "clean_fp_upper_pct": [
       "below {}% at 95"
+    ],
+    "clean_parts_offset_pp": [
+      "subtract {} points"
     ],
     "corpus_cases_total": [
       "{} corpus cases"
@@ -43,7 +52,7 @@
       "all {} direct"
     ],
     "direct_catch_pct": [
-      "{}% of direct joins"
+      "{}% of direct sites"
     ],
     "dst_entities_affected": [
       "clips {} windows"
@@ -54,6 +63,9 @@
     ],
     "dst_lost_value": [
       "worth {} of summed"
+    ],
+    "dst_minutes_inside": [
+      "{} minutes inside"
     ],
     "entities_total": [
       "{} entities"
@@ -109,8 +121,11 @@
     "leaking_features": [
       "{} of them leak"
     ],
+    "leaking_parts_pp": [
+      "alone sum to {}"
+    ],
     "overall_catch_pct": [
-      "catches {}% of the corpus"
+      "catches {}% of the corpus leak cases"
     ],
     "positives_total": [
       "{} positive outcomes"
@@ -161,18 +176,22 @@
     "auc_latest": 0.9457,
     "auc_point_in_time": 0.7668,
     "clean_cases": 7,
+    "clean_expectation_cases": 10,
+    "clean_expectation_flags": 3,
     "clean_false_positives": 0,
-    "clean_flagged_cases": 2,
+    "clean_flagged_cases": 3,
     "clean_fp_upper_pct": 34.8,
+    "clean_parts_offset_pp": 1.33,
     "corpus_cases_total": 36,
     "coverage_line_pct": 98.7,
     "crossover_share_pct": 50.0,
     "dialects_agreeing": 3,
-    "direct_cases": 18,
+    "direct_cases": 17,
     "direct_catch_pct": 100.0,
     "dst_entities_affected": 20,
     "dst_first_entity": 139,
     "dst_lost_value": 16.59965,
+    "dst_minutes_inside": 26.0,
     "entities_total": 3000,
     "events_total": 119540,
     "feature_severity_pp": 7.71,
@@ -180,20 +199,21 @@
     "features_total": 7,
     "gap_at_seven_delay_pp": 5.93,
     "gap_at_sixty_delay_pp": 15.26,
-    "gap_at_zero_delay_pp": 3.66,
+    "gap_at_zero_delay_pp": 2.21,
     "gap_fact_only_pp_max": 14.13,
     "gap_fact_only_pp_mean": 12.45,
     "gap_fact_only_pp_min": 11.66,
     "gap_latest_pp_mean": 17.89,
-    "leak_cases_detected": 18,
-    "leak_cases_total": 25,
+    "leak_cases_detected": 17,
+    "leak_cases_total": 24,
     "leaking_features": 3,
-    "overall_catch_pct": 72.0,
+    "leaking_parts_pp": 22.13,
+    "overall_catch_pct": 70.8,
     "positives_total": 589,
     "seeds": 5,
     "sql_files_total": 28,
     "sum_of_parts_pp": 20.8,
-    "tests_total": 237,
+    "tests_total": 239,
     "undetectable_classes_total": 3,
     "undetected_cases": 7,
     "worst_feature_name": "incident_count_90d",
