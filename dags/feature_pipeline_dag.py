@@ -66,14 +66,17 @@ with DAG(
     # flight, which would make this sensor the wrong_sensor_semantics class
     # the corpus declares invisible. The committed log guarantees arrival
     # order within each partition (offset order is arrival order), so the
-    # minimum of the per partition maxima is a true low watermark under
-    # this repository's own ingest model: every partition has delivered
-    # past the interval end, therefore nothing older is still in flight.
+    # minimum of the per partition maxima is a low watermark for every
+    # partition the GROUP BY can see. A wholly undelivered partition is
+    # invisible to a GROUP BY, which is the classic mid-ingest hole, so
+    # the predicate also pins the partition count; the literal 8 is the
+    # generator config's n_partitions and the fixture manifest's value.
     arrival_watermark_sensor = SqlSensor(
         task_id="arrival_watermark_sensor",
         conn_id="warehouse",
         sql=(
-            "SELECT MIN(latest_arrival) >= '{{ data_interval_end }}' FROM ("
+            "SELECT MIN(latest_arrival) >= '{{ data_interval_end }}' "
+            "AND COUNT(*) = 8 FROM ("
             "SELECT partition, MAX(arrival_time) AS latest_arrival "
             "FROM events GROUP BY partition) AS per_partition"
         ),
