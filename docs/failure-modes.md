@@ -5,16 +5,17 @@ about it. Ordered by how expensive the silence would be.
 
 ## 1. Session timezone arithmetic clips windows at daylight saving
 
-**Symptom.** Window aggregates disagree between engines, or between runs of
-the same SQL on hosts configured with different timezones: identical
-counts, different sums, only for entities whose window spans a transition.
+**Symptom.** Window aggregates disagree between engines, or between runs
+of the same SQL on hosts configured with different timezones, and only
+for entities whose window spans a transition: on the committed world the
+reconstruction moves both the count and the sum of the clipped window.
 
 **Mechanism.** `INTERVAL n DAY` on a timezone-aware timestamp is calendar
 arithmetic in the session timezone. Across a spring forward transition a
 calendar day loses an hour, so the window's lower bound lands one hour late
 and every event inside that hour is silently excluded. On the committed
 world a New York session clips 20 windows, and the first affected entity
-loses an event worth 16.59965 of summed value, sitting 26 minutes inside
+loses an event worth 16.59965 of summed value, sitting 26.0 minutes inside
 the lost hour.
 
 **Defence here.** Both engines pin their sessions to UTC, where a day is
