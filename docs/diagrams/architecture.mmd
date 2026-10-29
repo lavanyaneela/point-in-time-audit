@@ -1,0 +1,23 @@
+flowchart LR
+    subgraph world["The committed world"]
+        GEN["seeded generator<br/>fact_time + arrival_time"] --> LOG["Kafka-shaped event log<br/>offsets in arrival order"]
+    end
+
+    subgraph measure["Half one: the leak, measured"]
+        LOG --> SPARK["Spark engine<br/>DataFrames, local mode"]
+        LOG --> DUCK["DuckDB engine<br/>committed SQL"]
+        SPARK --> REF{"referee:<br/>value-for-value<br/>agreement"}
+        DUCK --> REF
+        REF --> MODEL["same model,<br/>paired splits"]
+        MODEL --> GAP["fabricated AUC<br/>per policy, per feature"]
+    end
+
+    subgraph gate["Half two: the gate"]
+        SQL["sql/ four dialects"] --> AN["static analyzer"]
+        DAGS["dags/ read with ast"] --> AN
+        REG["schema registry"] --> AN
+        AN --> E3["detection by class,<br/>misses published"]
+    end
+
+    GAP --> EXIT["exit codes<br/>0 clean | 1 leak | 2 refused | 3 error"]
+    E3 --> EXIT
