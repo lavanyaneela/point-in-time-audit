@@ -8,8 +8,8 @@ scheduler executing it; ADR-003 names that boundary and what running one
 would add.
 
 The task order is the argument: ingest lands facts with their arrival
-times, the watermark sensor refuses to proceed until arrivals have caught
-up to the interval end, and only then do features build and the model
+times, the watermark sensor refuses to proceed until every partition has
+delivered past the interval end, and only then do features build and the model
 train. Remove the sensor and every task still succeeds, every row is still
 present eventually, and the training set quietly contains facts nobody knew
 at prediction time. That failure needs no SQL, which is why the scan checks
@@ -28,9 +28,10 @@ from airflow.providers.common.sql.sensors.sql import SqlSensor
 
 
 def _ingest_event_log() -> None:
-    """Replays the committed, Kafka shaped log into the warehouse tables.
-    In production this callable is a consumer; here it is the fixture
-    loader, which preserves the same envelope and the same arrival order."""
+    """Loads and manifest-verifies the committed, Kafka shaped log. In
+    production this callable is a consumer writing to the warehouse; here
+    the committed parquet already is the table, so loading and verifying
+    it is the whole ingest and nothing further is written."""
     from point_in_time_audit.config import GeneratorConfig
     from point_in_time_audit.eventlog import load_fixture
 
@@ -60,10 +61,22 @@ with DAG(
         python_callable=_ingest_event_log,
     )
 
+    # The watermark is per partition on purpose. A global MAX(arrival_time)
+    # is satisfied by one late row while a 30 day incident is still in
+    # flight, which would make this sensor the wrong_sensor_semantics class
+    # the corpus declares invisible. The committed log guarantees arrival
+    # order within each partition (offset order is arrival order), so the
+    # minimum of the per partition maxima is a true low watermark under
+    # this repository's own ingest model: every partition has delivered
+    # past the interval end, therefore nothing older is still in flight.
     arrival_watermark_sensor = SqlSensor(
         task_id="arrival_watermark_sensor",
         conn_id="warehouse",
-        sql="SELECT MAX(arrival_time) >= '{{ data_interval_end }}' FROM events",
+        sql=(
+            "SELECT MIN(latest_arrival) >= '{{ data_interval_end }}' FROM ("
+            "SELECT partition, MAX(arrival_time) AS latest_arrival "
+            "FROM events GROUP BY partition) AS per_partition"
+        ),
         poke_interval=300,
         timeout=6 * 3600,
     )
