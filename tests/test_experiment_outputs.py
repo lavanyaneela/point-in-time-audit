@@ -111,5 +111,5 @@ def test_e5_agreement_count_matches_the_per_dialect_flags():
     for entry in e5["audit_queries"].values():
         for dialect, result in entry.items():
             assert result["parses"], dialect
-            if "rows_match_native" in result:
-                assert result["rows_match_native"], dialect
+            if "rows_match_reference" in result:
+                assert result["rows_match_reference"], dialect

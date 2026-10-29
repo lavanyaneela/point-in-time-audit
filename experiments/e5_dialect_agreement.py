@@ -61,21 +61,27 @@ def _run_on_duckdb(con, text: str) -> pd.DataFrame:
     return con.execute(text).df()
 
 
-def _run_spark_dialect(fixture, text: str) -> pd.DataFrame:
-    spark = get_spark("e5-dialect-agreement")
-    try:
-        with tempfile.TemporaryDirectory() as td:
-            ev = Path(td) / "events.parquet"
-            pr = Path(td) / "predictions.parquet"
-            fixture.events.to_parquet(ev, index=False)
-            fixture.predictions.to_parquet(pr, index=False)
-            spark.read.parquet(str(ev)).createOrReplaceTempView("events")
-            spark.read.parquet(str(pr)).createOrReplaceTempView("predictions")
-            rows = spark.sql(text).collect()
-            columns = spark.sql(text).columns
-        return pd.DataFrame(rows, columns=columns)
-    finally:
-        spark.stop()
+class _SparkRunner:
+    """One session, temp views registered once, every Spark dialect text
+    executed for real: the feature build and all four audit queries."""
+
+    def __init__(self, fixture):
+        self.spark = get_spark("e5-dialect-agreement")
+        self._td = tempfile.TemporaryDirectory()
+        ev = Path(self._td.name) / "events.parquet"
+        pr = Path(self._td.name) / "predictions.parquet"
+        fixture.events.to_parquet(ev, index=False)
+        fixture.predictions.to_parquet(pr, index=False)
+        self.spark.read.parquet(str(ev)).createOrReplaceTempView("events")
+        self.spark.read.parquet(str(pr)).createOrReplaceTempView("predictions")
+
+    def run(self, text: str) -> pd.DataFrame:
+        frame = self.spark.sql(text)
+        return pd.DataFrame(frame.collect(), columns=frame.columns)
+
+    def stop(self):
+        self.spark.stop()
+        self._td.cleanup()
 
 
 def main() -> int:
@@ -86,11 +92,12 @@ def main() -> int:
 
     results: dict[str, dict] = {}
     agreeing = 0
+    spark_runner = _SparkRunner(fixture)
     for dialect in COMPARED_DIALECTS:
         text = (SQL_ROOT / dialect / "features_point_in_time.sql").read_text(encoding="utf-8")
         sqlglot.parse_one(text, read=dialect)  # grammar check under its own dialect
         if dialect == "spark":
-            built = _run_spark_dialect(fixture, text)
+            built = spark_runner.run(text)
         else:
             transpiled = sqlglot.transpile(text, read=dialect, write="duckdb")[0]
             con = _duckdb_connection(fixture)
@@ -115,21 +122,22 @@ def main() -> int:
             for dialect in COMPARED_DIALECTS:
                 text = (SQL_ROOT / dialect / f"{query}.sql").read_text(encoding="utf-8")
                 sqlglot.parse_one(text, read=dialect)
-                if dialect == "spark":
-                    entry[dialect] = {"parses": True}
-                    continue
-                transpiled = sqlglot.transpile(text, read=dialect, write="duckdb")[0]
-                got = _run_on_duckdb(con, transpiled)
                 numeric = [
                     c for c in native.columns if pd.api.types.is_numeric_dtype(native[c])
                 ]
+                if dialect == "spark":
+                    got = spark_runner.run(text)
+                else:
+                    transpiled = sqlglot.transpile(text, read=dialect, write="duckdb")[0]
+                    got = _run_on_duckdb(con, transpiled)
                 entry[dialect] = {
                     "parses": True,
-                    "rows_match_native": _frames_identical(native, got, numeric),
+                    "rows_match_reference": _frames_identical(native, got, numeric),
                 }
             audit_results[query] = entry
     finally:
         con.close()
+        spark_runner.stop()
 
     payload = {
         "reference": "duckdb engine build of the point_in_time feature table",
@@ -138,8 +146,9 @@ def main() -> int:
         "dialects_agreeing": agreeing,
         "audit_queries": audit_results,
         "boundary": (
-            "snowflake and bigquery texts parse under their own grammars and execute "
-            "by transpilation onto duckdb; the hosted warehouses are not contacted"
+            "spark texts execute on a real local session; snowflake and bigquery "
+            "texts parse under their own grammars and execute by transpilation onto "
+            "duckdb; the hosted warehouses are not contacted"
         ),
     }
     path = write_result("e5_dialect_agreement.json", payload)

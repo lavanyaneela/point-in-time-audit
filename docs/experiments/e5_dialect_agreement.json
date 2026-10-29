@@ -3,57 +3,61 @@
     "arrival_delay_deciles": {
       "bigquery": {
         "parses": true,
-        "rows_match_native": true
+        "rows_match_reference": true
       },
       "snowflake": {
         "parses": true,
-        "rows_match_native": true
+        "rows_match_reference": true
       },
       "spark": {
-        "parses": true
+        "parses": true,
+        "rows_match_reference": true
       }
     },
     "backdated_corrections": {
       "bigquery": {
         "parses": true,
-        "rows_match_native": true
+        "rows_match_reference": true
       },
       "snowflake": {
         "parses": true,
-        "rows_match_native": true
+        "rows_match_reference": true
       },
       "spark": {
-        "parses": true
+        "parses": true,
+        "rows_match_reference": true
       }
     },
     "feature_visibility_diff": {
       "bigquery": {
         "parses": true,
-        "rows_match_native": true
+        "rows_match_reference": true
       },
       "snowflake": {
         "parses": true,
-        "rows_match_native": true
+        "rows_match_reference": true
       },
       "spark": {
-        "parses": true
+        "parses": true,
+        "rows_match_reference": true
       }
     },
     "leak_candidates": {
       "bigquery": {
         "parses": true,
-        "rows_match_native": true
+        "rows_match_reference": true
       },
       "snowflake": {
         "parses": true,
-        "rows_match_native": true
+        "rows_match_reference": true
       },
       "spark": {
-        "parses": true
+        "parses": true,
+        "rows_match_reference": true
       }
     }
   },
-  "boundary": "snowflake and bigquery texts parse under their own grammars and execute by transpilation onto duckdb; the hosted warehouses are not contacted",
+  "boundary": "spark texts execute on a real local session; snowflake and bigquery texts parse under their own grammars and execute by transpilation onto duckdb; the hosted warehouses are not contacted",
   "dialects_agreeing": 3,
   "dialects_compared": 3,
   "feature_build": {
