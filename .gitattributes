@@ -1,5 +1,7 @@
-# Count the SQL, workflow and DAG surface in the language bar. The SQL in this
-# repository is a deliverable, not generated noise, so it should be visible.
+# Count the SQL, workflow and DAG surface in the language bar. The SQL is
+# compiled from the spec and committed as a deliverable: the spec is the
+# source, the SQL is the product, and both are tested, so it belongs in
+# the bar rather than hidden as build output.
 *.sql linguist-detectable=true
 *.yml linguist-detectable=true
 *.yaml linguist-detectable=true

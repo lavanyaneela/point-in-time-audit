@@ -71,9 +71,12 @@ fails the build on the first stale sentence.
 **Symptom.** "No false positives" hardens into "the analyzer never false
 positives" three retellings later.
 
-**Mechanism.** 0 false positives over the 7 clean cases bounds the rate
-only below 34.8% at 95 percent confidence, and nothing about a small
-corpus licenses more.
+**Mechanism.** The honest statement needs both denominators. Over the 10
+cases whose ground truth is clean the analyzer flags 3, every one a
+correct predicate it declines to certify; over the 7 written with bare
+predicates it shows 0 false positives, which bounds that rate only below
+34.8% at 95 percent confidence, and nothing about a small corpus licenses
+more.
 
 **Defence here.** The bound is computed in the collector, anchored in the
 README beside the zero, and this entry exists so the limitation is a

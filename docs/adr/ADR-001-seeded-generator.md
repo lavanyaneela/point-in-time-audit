@@ -25,7 +25,7 @@ pipeline read and what was knowable both have exact answers.
 Every headline is a property of a chosen world. The committed configuration
 is one point in a space, and a different delay distribution gives a
 different gap, which is not a caveat buried here but the subject of E4: the
-sweep publishes the gap as a function of the delay, from 3.66 points at zero
+sweep publishes the gap as a function of the delay, from 2.21 points at zero
 incident delay to a climb to 15.26 points at the top of the sweep. The
 README quotes the committed default and points at the curve. ADR-005 carries
 the second half of the cost: the delays are chosen, not observed, and what

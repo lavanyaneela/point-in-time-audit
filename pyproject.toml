@@ -66,11 +66,11 @@ branch = false
 
 [tool.coverage.report]
 precision = 1
-# The live Kafka consumer and the Airflow import shim run only under optional
-# extras and, for the consumer, only against a reachable broker. Counting them
-# in the default denominator makes the published percentage unreachable in the
-# offline matrix, so they are excluded here and the exclusion is disclosed in
-# the README's credibility line.
+# The live Kafka consumer runs only under the optional extra and only
+# against a reachable broker. Counting it in the default denominator makes
+# the published percentage unreachable in the offline matrix, so it is
+# excluded here and the exclusion is disclosed in the README's credibility
+# line.
 omit = [
     "*/point_in_time_audit/ingest/live_kafka.py",
 ]

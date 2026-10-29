@@ -3,7 +3,7 @@
 The contract is the product. Most leak detectors silently assume the one
 timestamp they can see is the truth; this one distinguishes "no leak found"
 from "leak found" from "your schema cannot answer the question", and the
-third of those is the most important line of code in the repository.
+third of those is the clause the rest of the contract exists to protect.
 """
 
 from __future__ import annotations

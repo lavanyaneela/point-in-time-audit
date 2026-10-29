@@ -28,10 +28,10 @@ one wrapper over the other, their agreement would be a tautology.
 
 ## The decision paid for itself in its first hour
 
-The first parity run disagreed: identical counts, different sums, for a
-subset of entities. The cause was session timezone calendar arithmetic
-clipping one hour from every window that crossed the spring forward
-transition, detailed in `docs/failure-modes.md` and reconstructed by a test
+The first parity run disagreed on the activity window features for a
+subset of entities, one engine consistently larger. The cause was
+session timezone calendar arithmetic clipping one hour from every
+window that crossed the spring forward transition, detailed in `docs/failure-modes.md` and reconstructed by a test
 that re-runs the broken session. Neither engine alone would have surfaced
 it; the numbers were plausible both ways. That is the referee arrangement
 doing the only job it has.

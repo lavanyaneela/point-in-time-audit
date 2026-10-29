@@ -46,13 +46,20 @@ or register the site as reviewed, not to teach the analyzer trust.
 
 ## Was the declaration right
 
-E3's answer: direct classes detect at 100.0% of direct joins across varied
-syntax, the clean controls produce 0 false positives, the relay classes
-detect at zero exactly as declared, and the declaration survived contact
-with the corpus unchanged. The one undeclared discovery was procedural, not
-semantic: the first corpus run found nothing at all because of a dependency
-rename, which is recorded in the README's bug section and pinned by a
-regression test. The pivot arithmetic then prices the declaration's limit:
+E3's answer: direct classes detect at 100.0% of direct sites across
+varied syntax, the bare-predicate clean controls produce 0 false
+positives, the declared cost lands as designed (the analyzer flags 3 of
+the 10 cases whose ground truth is clean, every one a wrapped correct
+predicate), and the relay classes detect at zero exactly as declared.
+The declaration did not survive contact entirely unchanged, and in two
+directions. First, procedurally: the first corpus run found nothing at
+all because of a dependency rename, recorded in the README's bug section
+and pinned by a regression test. Second, in the ground truth itself: the
+corpus's first labelling put a knowability-correct BETWEEN in the leak
+column, which graded the tool on a curve, and the audit moved the case
+to where rule 4 says it belongs, priced cost rather than catch.
+
+The pivot arithmetic then prices the declaration's limit:
 once intermediate routing passes the computed crossover, the blind share
 dominates and the scope itself, not the implementation, is what has to
 change, in the direction of a store that makes arrival a first class

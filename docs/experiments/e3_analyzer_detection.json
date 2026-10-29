@@ -1,5 +1,7 @@
 {
   "clean_cases": 7,
+  "clean_expectation_cases": 10,
+  "clean_expectation_flags": 3,
   "clean_false_positives": 0,
   "clean_flagged_cases": 3,
   "clean_flagged_flagged": 3,

@@ -3,7 +3,8 @@
 The format follows Keep a Changelog, versions follow semantic intent: the
 measured leak first, the gate second, the full surface third. All three
 landed in one concentrated build (the defense guide carries the provenance
-note), tagged in the order the capabilities reached done.
+note), with the tags minted together at the end of the session, each
+placed on the commit where its capability completed.
 
 ## [0.3.0] - 2026-10-29
 
