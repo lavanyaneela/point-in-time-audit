@@ -1,0 +1,20 @@
+{
+  "generator_config_sha256": "a2f7bfef04794b35abf0b48901c50cdf39813b93d31fe6d4fdbe6d091c1dbe1e",
+  "files": {
+    "events.parquet": {
+      "sha256": "efebce59bd62529f23f75b6898bbac5bcc1c6c6de80495e1ab6ce083f0313d12",
+      "content_sha256": "e32ed31b5fb585fe037c42f534a8cb858015aed6a1931086d02daaef16e852a2",
+      "rows": 120492
+    },
+    "predictions.parquet": {
+      "sha256": "66061bd2d3768d29e27a945a0ab6ae1ca290984a00d35a85c7b60860e6f7bd9d",
+      "content_sha256": "687badb1d693142491228a7cc1de0710ebc1203ccd40148782b69b822460ea88",
+      "rows": 3000
+    }
+  },
+  "events_total": 120492,
+  "entities_total": 3000,
+  "positives_total": 788,
+  "topic": "entity-events",
+  "partitions": 8
+}
