@@ -1,0 +1,101 @@
+{
+  "gap_at_default_pp": 12.45,
+  "gap_at_zero_delay_pp": 3.66,
+  "generator_config_sha256": "636c51a52291751892510c48453be0cf36226ebbc2a2fc4fef07716970989221",
+  "medians_days": [
+    0.0,
+    3.5,
+    7.0,
+    14.0,
+    30.0,
+    60.0
+  ],
+  "points": [
+    {
+      "auc_fact_only_mean": 0.8849,
+      "auc_point_in_time_mean": 0.8483,
+      "gap_pp": [
+        3.5423,
+        3.2607,
+        4.6042,
+        3.3966,
+        3.4775
+      ],
+      "gap_pp_mean": 3.66,
+      "incident_delay_median_days": 0.0,
+      "positives_total": 602
+    },
+    {
+      "auc_fact_only_mean": 0.8913,
+      "auc_point_in_time_mean": 0.8486,
+      "gap_pp": [
+        4.8912,
+        4.8644,
+        4.3915,
+        3.3156,
+        3.8679
+      ],
+      "gap_pp_mean": 4.27,
+      "incident_delay_median_days": 3.5,
+      "positives_total": 589
+    },
+    {
+      "auc_fact_only_mean": 0.8913,
+      "auc_point_in_time_mean": 0.8319,
+      "gap_pp": [
+        6.8233,
+        5.7075,
+        4.563,
+        5.0162,
+        7.5619
+      ],
+      "gap_pp_mean": 5.93,
+      "incident_delay_median_days": 7.0,
+      "positives_total": 589
+    },
+    {
+      "auc_fact_only_mean": 0.8913,
+      "auc_point_in_time_mean": 0.8036,
+      "gap_pp": [
+        9.3887,
+        9.1454,
+        6.5407,
+        8.2193,
+        10.5657
+      ],
+      "gap_pp_mean": 8.77,
+      "incident_delay_median_days": 14.0,
+      "positives_total": 589
+    },
+    {
+      "auc_fact_only_mean": 0.8913,
+      "auc_point_in_time_mean": 0.7668,
+      "gap_pp": [
+        14.1259,
+        11.6598,
+        11.7168,
+        11.6716,
+        13.0929
+      ],
+      "gap_pp_mean": 12.45,
+      "incident_delay_median_days": 30.0,
+      "positives_total": 589
+    },
+    {
+      "auc_fact_only_mean": 0.8913,
+      "auc_point_in_time_mean": 0.7387,
+      "gap_pp": [
+        16.5909,
+        15.441,
+        14.6427,
+        14.9054,
+        14.7003
+      ],
+      "gap_pp_mean": 15.26,
+      "incident_delay_median_days": 60.0,
+      "positives_total": 589
+    }
+  ],
+  "referee": "both engines built every sweep point; disagreement refuses the sweep",
+  "residual_note": "the gap at zero incident delay is the backdated correction leak, which arrives on its own clock and which no ingestion speedup removes"
+}

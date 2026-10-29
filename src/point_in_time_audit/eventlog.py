@@ -72,6 +72,21 @@ class Fixture:
     manifest: dict
 
 
+def materialize_times(
+    events: pd.DataFrame, predictions: pd.DataFrame
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Adds the timestamp columns the SQL surface reads to frames fresh from
+    the generator, which carries only float days. The committed fixture gets
+    these at write time; an in-memory world (the E4 sweep) gets them here,
+    through the same conversion, so both paths exercise the same SQL."""
+    ev = events.copy()
+    ev["fact_time"] = to_timestamp(ev["fact_days"])
+    ev["arrival_time"] = to_timestamp(ev["arrival_days"])
+    pr = predictions.copy()
+    pr["prediction_time"] = to_timestamp(pr["prediction_days"])
+    return ev, pr
+
+
 def write_fixture(
     events: pd.DataFrame, predictions: pd.DataFrame, cfg: GeneratorConfig, out_dir: Path
 ) -> dict:
