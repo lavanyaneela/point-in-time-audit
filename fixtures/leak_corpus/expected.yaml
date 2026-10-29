@@ -1,0 +1,73 @@
+# Ground truth for E3. Each case names its leak class and what a perfect
+# gate would do, so the analyzer's detection rate per class is a measured
+# number, not a claim. The "expectation" field is about the world, not the
+# tool: E3 compares the tool's behaviour against it and publishes the gaps.
+#
+# expectation values:
+#   leak     the case leaks and a perfect gate would name it
+#   clean    the case is correct and a perfect gate would pass it
+#   refused  the question is unanswerable for a joined table; exit 2 is right
+#
+# detectable: whether the class is inside the analyzer's declared scope
+# (ADR-004). E3 verifies the declaration against what actually happens.
+
+classes:
+  no_time_predicate: { detectable: true, grain: sql }
+  fact_only_predicate: { detectable: true, grain: sql }
+  wrong_comparand: { detectable: true, grain: sql }
+  udf_wrapped: { detectable: true, grain: sql }
+  clean: { detectable: true, grain: sql }
+  clean_flagged: { detectable: true, grain: sql }
+  intermediate_table: { detectable: false, grain: sql }
+  cte_relay: { detectable: false, grain: sql }
+  refusal: { detectable: true, grain: sql }
+  missing_sensor: { detectable: true, grain: dag }
+  sensor_present: { detectable: true, grain: dag }
+  wrong_sensor_semantics: { detectable: false, grain: dag }
+
+cases:
+  - { file: no_time_predicate/join_on_entity_only.sql, class: no_time_predicate, expectation: leak }
+  - { file: no_time_predicate/comma_join_where_entity.sql, class: no_time_predicate, expectation: leak }
+  - { file: no_time_predicate/left_join_aggregate.sql, class: no_time_predicate, expectation: leak }
+  - { file: no_time_predicate/second_event_source.sql, class: no_time_predicate, expectation: leak }
+
+  - { file: fact_only_predicate/classic_on_clause.sql, class: fact_only_predicate, expectation: leak }
+  - { file: fact_only_predicate/where_clause.sql, class: fact_only_predicate, expectation: leak }
+  - { file: fact_only_predicate/window_both_bounds.sql, class: fact_only_predicate, expectation: leak }
+  - { file: fact_only_predicate/reversed_operands.sql, class: fact_only_predicate, expectation: leak }
+  - { file: fact_only_predicate/second_source_columns.sql, class: fact_only_predicate, expectation: leak }
+
+  - { file: wrong_comparand/current_timestamp.sql, class: wrong_comparand, expectation: leak }
+  - { file: wrong_comparand/literal_date.sql, class: wrong_comparand, expectation: leak }
+  - { file: wrong_comparand/own_fact_time.sql, class: wrong_comparand, expectation: leak }
+  - { file: wrong_comparand/wrong_prediction_column.sql, class: wrong_comparand, expectation: leak }
+
+  - { file: udf_wrapped/is_recent.sql, class: udf_wrapped, expectation: leak }
+  - { file: udf_wrapped/visibility_helper.sql, class: udf_wrapped, expectation: leak }
+  - { file: udf_wrapped/between_shape.sql, class: udf_wrapped, expectation: leak }
+
+  - { file: clean/direct_join_on.sql, class: clean, expectation: clean }
+  - { file: clean/where_both.sql, class: clean, expectation: clean }
+  - { file: clean/reversed_operands.sql, class: clean, expectation: clean }
+  - { file: clean/window_plus_arrival.sql, class: clean, expectation: clean }
+  - { file: clean/strict_inequality.sql, class: clean, expectation: clean }
+  - { file: clean/two_sources_both_correct.sql, class: clean, expectation: clean }
+
+  - { file: clean_flagged/udf_correct.sql, class: clean_flagged, expectation: clean }
+  - { file: clean_flagged/case_wrapped.sql, class: clean_flagged, expectation: clean }
+
+  - { file: intermediate_table/ctas_then_join.sql, class: intermediate_table, expectation: leak }
+  - { file: intermediate_table/insert_then_join.sql, class: intermediate_table, expectation: leak }
+  - { file: intermediate_table/two_hops.sql, class: intermediate_table, expectation: leak }
+
+  - { file: cte_relay/simple_cte.sql, class: cte_relay, expectation: leak }
+  - { file: cte_relay/inline_subquery.sql, class: cte_relay, expectation: leak }
+  - { file: cte_relay/nested_ctes.sql, class: cte_relay, expectation: leak }
+
+  - { file: refusal/single_timestamp_table.sql, class: refusal, expectation: refused }
+  - { file: refusal/unregistered_table.sql, class: refusal, expectation: refused }
+  - { file: refusal/leak_beats_refusal.sql, class: refusal, expectation: leak }
+
+  - { file: dags/missing_sensor.py, class: missing_sensor, expectation: leak }
+  - { file: dags/with_sensor.py, class: sensor_present, expectation: clean }
+  - { file: dags/wrong_sensor_semantics.py, class: wrong_sensor_semantics, expectation: leak }
