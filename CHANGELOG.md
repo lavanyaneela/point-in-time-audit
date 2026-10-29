@@ -6,6 +6,21 @@ landed in one concentrated build (the defense guide carries the provenance
 note), with the tags minted together at the end of the session, each
 placed on the commit where its capability completed.
 
+## [0.3.1] - 2026-10-29
+
+### Fixed
+- Findings of the two-pass hostile audit, each in its own commit: a war
+  story symptom the committed SQL makes impossible, a corpus label that
+  graded the gate on a curve (the knowability correct BETWEEN moved to
+  priced cost, taking the catch rate from the flattering figure to the
+  measured 70.8 percent of 24 leak cases), denominators restated to
+  travel with their numbers, the sweep's zero endpoint made the same
+  world as the other five (residual 2.21, with an RNG stream invariant
+  test), the lost hour position measured instead of typed, the report
+  page carrying both clean denominators, one watermark standard across
+  the pipeline and the corpus with the empty partition hole pinned, and
+  a provenance section that describes the log exactly.
+
 ## [0.3.0] - 2026-10-29
 
 ### Added
