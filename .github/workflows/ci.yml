@@ -1,0 +1,198 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Lint
+        run: python -m ruff check src tests experiments tools dags
+      - name: Tests with coverage
+        run: |
+          python -m pytest --junitxml=junit.xml \
+            --cov=point_in_time_audit --cov-report=json --cov-report=term
+      - name: Coverage floor
+        run: |
+          python - <<'EOF'
+          import json, sys
+          covered = json.load(open("coverage.json"))["totals"]["percent_covered"]
+          floor = 95.0
+          print(f"line coverage {covered:.1f} against a floor of {floor}")
+          sys.exit(0 if covered >= floor else 1)
+          EOF
+      - name: Published test count equals the collected count
+        run: |
+          collected=$(python -m pytest --collect-only --override-ini addopts= -q | grep -c '::')
+          published=$(python -c "import json; print(json.load(open('docs/metrics.json'))['metrics']['tests_total'])")
+          echo "collected=$collected published=$published"
+          test "$collected" = "$published"
+      - name: Upload run artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.python-version }}
+          path: |
+            junit.xml
+            coverage.json
+
+  receipts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Re-measure every published figure
+        run: make receipts
+      - name: Measurements are byte reproducible
+        run: git diff --exit-code docs/metrics.json docs/experiments docs/report.html
+      - name: Prove the checker can fail
+        run: python tools/prove_checker.py
+      - name: Demo against this repository's own SQL
+        run: make demo
+      - name: Publish the awkward tables to the job summary
+        run: |
+          python - <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          e3 = json.load(open("docs/experiments/e3_analyzer_detection.json"))
+          e4 = json.load(open("docs/experiments/e4_delay_sweep.json"))
+          print("## E3: detection by class, misses included\n")
+          print("| class | cases | leak findings | detection | declared detectable |")
+          print("| --- | --- | --- | --- | --- |")
+          for name, stats in sorted(e3["per_class"].items()):
+              rate = stats["detection_rate"]
+              print(f"| {name} | {stats['cases']} | {stats['leak_findings']} | "
+                    f"{'' if rate is None else rate} | {stats['detectable_by_declaration']} |")
+          print(f"\ncrossover intermediate share: {e3['crossover_intermediate_share_pct']}%\n")
+          print("## E4: fabricated AUC by incident delay median\n")
+          print("| median, days | gap, points |")
+          print("| --- | --- |")
+          for point in e4["points"]:
+              print(f"| {point['incident_delay_median_days']} | {point['gap_pp_mean']} |")
+          EOF
+
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install with the fixture writer pinned
+        run: |
+          pip install -e ".[dev]"
+          pip install "pyarrow==26.0.0" "pandas==3.0.5"
+      - name: Fixture and SQL regeneration leave the tree clean
+        run: |
+          make fixture
+          make sql
+          git diff --exit-code
+
+  coverage-endpoint:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [lint-and-test, receipts]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Measure
+        run: python -m pytest -q --cov=point_in_time_audit --cov-report=json
+      - name: Publish the shields endpoint to gh-pages
+        run: |
+          python - <<'EOF'
+          import json
+          covered = json.load(open("coverage.json"))["totals"]["percent_covered"]
+          color = "brightgreen" if covered >= 95 else "orange" if covered >= 85 else "red"
+          payload = {"schemaVersion": 1, "label": "coverage",
+                     "message": f"{covered:.1f}%", "color": color}
+          open("endpoint.json", "w").write(json.dumps(payload))
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin gh-pages || true
+          git checkout gh-pages 2>/dev/null || git checkout --orphan gh-pages
+          git rm -rf --ignore-unmatch . >/dev/null
+          mv endpoint.json coverage.json
+          git add coverage.json
+          git commit -m "coverage endpoint" || true
+          git push origin gh-pages
+
+  optional-kafka-roundtrip:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    services:
+      kafka:
+        image: bitnami/kafka:3.7
+        ports:
+          - 9092:9092
+        env:
+          KAFKA_CFG_NODE_ID: "0"
+          KAFKA_CFG_PROCESS_ROLES: controller,broker
+          KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@localhost:9093
+          KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+          KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+          KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install with the kafka extra
+        run: pip install -e ".[dev,kafka]"
+      - name: Round trip the fixture through the broker
+        env:
+          PIT_KAFKA_BOOTSTRAP: localhost:9092
+        run: python -m pytest tests/test_ingest_kafka.py -m kafka -q
+    # Non blocking by design: the badge does not vouch for this job, and the
+    # README says only that a job exists which exercises this path against a
+    # real broker. See the boundary table before quoting anything stronger.
+
+  optional-airflow-import:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install with the airflow extra
+        run: |
+          pip install -e ".[dev]"
+          pip install "apache-airflow==2.10.5" \
+            --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.10.5/constraints-3.11.txt"
+      - name: The DAG imports under a real loader
+        run: python -m pytest tests/test_dag_analyzer.py -m airflow -q

@@ -1,0 +1,42 @@
+name: point-in-time-audit
+description: Flags temporal joins that cannot be point-in-time correct and refuses when the schema cannot pose the question
+author: Lavanya Neela
+
+branding:
+  icon: clock
+  color: red
+
+inputs:
+  sql:
+    description: SQL files or directories to scan
+    required: false
+    default: sql
+  dags:
+    description: DAG files or directories to scan
+    required: false
+    default: ""
+  registry:
+    description: Path to the schema registry YAML
+    required: true
+  dialect:
+    description: SQL dialect for parsing
+    required: false
+    default: spark
+
+runs:
+  using: composite
+  steps:
+    - name: Install pit-audit
+      shell: bash
+      run: pip install "${{ github.action_path }}"
+    - name: Scan
+      shell: bash
+      run: |
+        args=(scan --registry "${{ inputs.registry }}" --dialect "${{ inputs.dialect }}")
+        if [ -n "${{ inputs.sql }}" ]; then args+=(--sql ${{ inputs.sql }}); fi
+        if [ -n "${{ inputs.dags }}" ]; then args+=(--dags ${{ inputs.dags }}); fi
+        pit-audit "${args[@]}"
+        # Exit codes: 0 clean, 1 leak named, 2 refused because no arrival
+        # column exists, 3 tool error. A step failure on 2 is the point:
+        # a schema that cannot answer should not pass quietly. Branch on
+        # $? in a follow-up step if your policy treats refusal differently.
