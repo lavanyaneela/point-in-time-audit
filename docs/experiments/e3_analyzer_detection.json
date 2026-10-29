@@ -1,19 +1,19 @@
 {
   "clean_cases": 7,
   "clean_false_positives": 0,
-  "clean_flagged_cases": 2,
-  "clean_flagged_flagged": 2,
+  "clean_flagged_cases": 3,
+  "clean_flagged_flagged": 3,
   "corpus_cases_total": 36,
   "crossover_intermediate_share": 0.5,
   "crossover_intermediate_share_pct": 50.0,
-  "direct_cases": 18,
+  "direct_cases": 17,
   "direct_catch_pct": 100.0,
   "direct_catch_rate": 1.0,
-  "direct_hits": 18,
+  "direct_hits": 17,
   "generator_config_sha256": "636c51a52291751892510c48453be0cf36226ebbc2a2fc4fef07716970989221",
-  "leak_cases_detected": 18,
-  "leak_cases_total": 25,
-  "overall_catch_pct": 72.0,
+  "leak_cases_detected": 17,
+  "leak_cases_total": 24,
+  "overall_catch_pct": 70.8,
   "per_case": [
     {
       "class": "no_time_predicate",
@@ -121,13 +121,6 @@
       "uncertified_relays": 0
     },
     {
-      "class": "udf_wrapped",
-      "exit_code": 1,
-      "expectation": "leak",
-      "file": "udf_wrapped/between_shape.sql",
-      "uncertified_relays": 0
-    },
-    {
       "class": "clean",
       "exit_code": 0,
       "expectation": "clean",
@@ -181,6 +174,13 @@
       "exit_code": 1,
       "expectation": "clean",
       "file": "clean_flagged/case_wrapped.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "clean_flagged",
+      "exit_code": 1,
+      "expectation": "clean",
+      "file": "clean_flagged/between_shape.sql",
       "uncertified_relays": 0
     },
     {
@@ -279,12 +279,12 @@
       "refusals": 0
     },
     "clean_flagged": {
-      "cases": 2,
+      "cases": 3,
       "clean_passes": 0,
       "detectable_by_declaration": true,
       "detection_rate": 1.0,
       "grain": "sql",
-      "leak_findings": 2,
+      "leak_findings": 3,
       "refusals": 0
     },
     "cte_relay": {
@@ -351,12 +351,12 @@
       "refusals": 0
     },
     "udf_wrapped": {
-      "cases": 3,
+      "cases": 2,
       "clean_passes": 0,
       "detectable_by_declaration": true,
       "detection_rate": 1.0,
       "grain": "sql",
-      "leak_findings": 3,
+      "leak_findings": 2,
       "refusals": 0
     },
     "wrong_comparand": {

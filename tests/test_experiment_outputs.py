@@ -46,7 +46,8 @@ def test_e1_and_e4_agree_at_the_default_delay_point():
     )
     assert default_point["gap_pp_mean"] == e1["gap_fact_only_pp_mean"], (
         "the sweep's 30 day point regenerates the committed world and must "
-        "reproduce E1 exactly; a difference means a seed or a config drifted"
+        "reproduce E1 at the published precision; a difference there means "
+        "a seed or a config drifted"
     )
 
 
@@ -79,6 +80,16 @@ def test_e3_overall_catch_is_the_published_ratio():
     e3 = _load("e3_analyzer_detection.json")
     assert e3["overall_catch_pct"] == round(
         100.0 * e3["leak_cases_detected"] / e3["leak_cases_total"], 1
+    )
+
+
+def test_e4_sweeps_one_world_not_six():
+    e4 = _load("e4_delay_sweep.json")
+    positives = {p["positives_total"] for p in e4["points"]}
+    assert len(positives) == 1, (
+        "the sweep varies the incident delay and nothing else; a point with "
+        "its own positive count is a different world, which is exactly how "
+        "the first cut of the zero endpoint shipped before the audit"
     )
 
 

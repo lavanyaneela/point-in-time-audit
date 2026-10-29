@@ -36,9 +36,16 @@ def _lognormal_delay(rng: np.random.Generator, n: int, median: float, sigma: flo
     """Lognormal arrival delays parameterised by their median, in days.
 
     A median of zero is allowed and means instantaneous arrival, which E4
-    uses as the no-delay endpoint of the sweep.
+    uses as the no-delay endpoint of the sweep. The zero branch still
+    consumes exactly the draws the nonzero branch would, because an early
+    return that skips the generator desynchronises every later draw and
+    turns the sweep's zero point into a different world: different labels,
+    different facts, and a residual nobody can attribute. The first cut of
+    this function did exactly that, and the audit caught it in E4's output
+    (the zero row alone had a different positive count).
     """
     if median <= 0.0:
+        rng.lognormal(mean=0.0, sigma=sigma, size=n)
         return np.zeros(n)
     return rng.lognormal(mean=np.log(median), sigma=sigma, size=n)
 
