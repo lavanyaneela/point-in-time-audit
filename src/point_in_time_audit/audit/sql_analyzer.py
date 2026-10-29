@@ -60,7 +60,10 @@ def _direct_relations(select: exp.Select) -> list[tuple[str, exp.Expression]]:
     """(alias, node) for each FROM or JOIN source of this select only."""
     out: list[tuple[str, exp.Expression]] = []
     sources: list[exp.Expression] = []
-    from_clause = select.args.get("from")
+    # sqlglot renamed the Select arg from "from" to "from_" at version 30;
+    # read both so the analyzer does not silently see zero relations under
+    # one of them, which is exactly how its first corpus run failed.
+    from_clause = select.args.get("from_") or select.args.get("from")
     if from_clause is not None:
         sources.append(from_clause.this)
     for join in select.args.get("joins") or []:
