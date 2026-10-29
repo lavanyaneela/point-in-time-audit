@@ -124,6 +124,18 @@ def topological_order(tasks: dict[str, DagTask]) -> list[str]:
     return order
 
 
+def _resolve_sql_file(dag_path: Path, rel: str) -> Path | None:
+    """A sql= argument naming a file resolves against the DAG's repository
+    root (the parent of its dags/ directory) and then against the DAG's own
+    directory. Airflow's template_searchpath can point anywhere, which is
+    one more reason the unresolved case is flagged rather than skipped."""
+    for base in (dag_path.resolve().parent.parent, dag_path.resolve().parent):
+        candidate = base / rel
+        if candidate.exists():
+            return candidate
+    return None
+
+
 def analyze_dag_path(path: Path, registry: SchemaRegistry) -> ScanReport:
     text = Path(path).read_text(encoding="utf-8")
     tasks = parse_dag_source(text)
@@ -135,15 +147,35 @@ def analyze_dag_path(path: Path, registry: SchemaRegistry) -> ScanReport:
     lineage: dict[str, set[str]] = {}
     for name in topological_order(tasks):
         task = tasks[name]
-        if task.sql:
-            sub = analyze_sql_text(
-                task.sql,
-                registry,
-                source=f"{path}::{name}",
-                lineage=lineage,
-            )
-            report.findings.extend(sub.findings)
-            report.infos.extend(sub.infos)
+        if not task.sql:
+            continue
+        sql_text = task.sql
+        if sql_text.strip().endswith(".sql") and "\n" not in sql_text.strip():
+            resolved = _resolve_sql_file(Path(path), sql_text.strip())
+            if resolved is None:
+                report.findings.append(
+                    Finding(
+                        source=str(path),
+                        site=f"task {name}",
+                        event_table="(sql file)",
+                        verdict=Verdict.UNANALYZABLE,
+                        detail=(
+                            f"task references {sql_text.strip()!r} and the file cannot be "
+                            "found from the DAG's repository; the analyzer does not "
+                            "certify what it cannot read"
+                        ),
+                    )
+                )
+                continue
+            sql_text = resolved.read_text(encoding="utf-8")
+        sub = analyze_sql_text(
+            sql_text,
+            registry,
+            source=f"{path}::{name}",
+            lineage=lineage,
+        )
+        report.findings.extend(sub.findings)
+        report.infos.extend(sub.infos)
 
     for name, task in tasks.items():
         if not task.is_training:
