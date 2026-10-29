@@ -51,7 +51,14 @@ def main() -> int:
             ("direct join detection", f"{metrics['direct_catch_pct']}%"),
             ("overall corpus detection", f"{metrics['overall_catch_pct']}%"),
             ("structurally invisible classes", str(metrics["undetectable_classes_total"])),
-            ("false positives on clean cases", f"{metrics['clean_false_positives']} of {metrics['clean_cases']}"),
+            (
+                "flags on clean ground truth",
+                f"{metrics['clean_expectation_flags']} of {metrics['clean_expectation_cases']}, every one a wrapped correct predicate",
+            ),
+            (
+                "false positives on bare-predicate clean cases",
+                f"{metrics['clean_false_positives']} of {metrics['clean_cases']}",
+            ),
             ("crossover intermediate share", f"{metrics['crossover_share_pct']}%"),
         ],
     )

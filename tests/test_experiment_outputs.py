@@ -83,7 +83,7 @@ def test_e3_overall_catch_is_the_published_ratio():
     )
 
 
-def test_e4_sweeps_one_world_not_six():
+def test_e4_holds_the_positive_count_constant_across_sweep_points():
     e4 = _load("e4_delay_sweep.json")
     positives = {p["positives_total"] for p in e4["points"]}
     assert len(positives) == 1, (
