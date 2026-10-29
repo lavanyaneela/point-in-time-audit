@@ -44,7 +44,6 @@ cases:
 
   - { file: udf_wrapped/is_recent.sql, class: udf_wrapped, expectation: leak }
   - { file: udf_wrapped/visibility_helper.sql, class: udf_wrapped, expectation: leak }
-  - { file: udf_wrapped/between_shape.sql, class: udf_wrapped, expectation: leak }
 
   - { file: clean/direct_join_on.sql, class: clean, expectation: clean }
   - { file: clean/where_both.sql, class: clean, expectation: clean }
@@ -55,6 +54,7 @@ cases:
 
   - { file: clean_flagged/udf_correct.sql, class: clean_flagged, expectation: clean }
   - { file: clean_flagged/case_wrapped.sql, class: clean_flagged, expectation: clean }
+  - { file: clean_flagged/between_shape.sql, class: clean_flagged, expectation: clean }
 
   - { file: intermediate_table/ctas_then_join.sql, class: intermediate_table, expectation: leak }
   - { file: intermediate_table/insert_then_join.sql, class: intermediate_table, expectation: leak }
