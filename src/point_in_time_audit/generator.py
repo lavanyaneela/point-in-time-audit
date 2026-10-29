@@ -136,7 +136,7 @@ def generate_world(cfg: GeneratorConfig) -> tuple[pd.DataFrame, pd.DataFrame]:
     ass_value = (
         np.repeat(risk, k_assess)
         + cfg.post_assessment_label_shift * post * (np.repeat(label, k_assess) - 0.5)
-        + rng.normal(0.0, 0.4, size=n * k_assess)
+        + rng.normal(0.0, cfg.assessment_noise, size=n * k_assess)
     )
     frames.append(
         pd.DataFrame(
@@ -186,7 +186,10 @@ def generate_world(cfg: GeneratorConfig) -> tuple[pd.DataFrame, pd.DataFrame]:
             }
         )
     )
-    corrected = (label == 1) & (rng.uniform(size=n) < cfg.correction_prob_positive)
+    corr_draw = rng.uniform(size=n)
+    corrected = ((label == 1) & (corr_draw < cfg.correction_prob_positive)) | (
+        (label == 0) & (corr_draw < cfg.correction_prob_negative)
+    )
     n_corr = int(corrected.sum())
     corr_created = pred_days[corrected] + rng.uniform(5.0, 25.0, size=n_corr)
     corr_fact = pred_days[corrected] - rng.uniform(0.0, cfg.correction_backdate_max, size=n_corr)

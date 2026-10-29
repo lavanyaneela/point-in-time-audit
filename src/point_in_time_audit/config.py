@@ -28,7 +28,7 @@ class DelayConfig:
     activity_sigma: float = 0.6
     assessment_median: float = 1.5
     assessment_sigma: float = 0.8
-    incident_median: float = 14.0
+    incident_median: float = 30.0
     incident_sigma: float = 1.0
     status_median: float = 5.0
     status_sigma: float = 1.2
@@ -46,22 +46,29 @@ class GeneratorConfig:
 
     # Latent risk drives everything observable.
     activity_rate_base: float = 3.2
-    activity_rate_risk: float = -0.3
+    activity_rate_risk: float = -0.15
     assessment_every_days: float = 10.0
-    incident_rate_base: float = -0.9
-    incident_rate_risk: float = 1.1
-    incident_fact_before: float = 45.0
+    assessment_noise: float = 0.7
+    incident_rate_base: float = -0.3
+    incident_rate_risk: float = 1.2
+    incident_fact_before: float = 25.0
     incident_fact_after: float = 15.0
 
     # Label model: risk plus the incident count inside the feature window.
-    label_risk_weight: float = 1.0
-    label_incident_weight: float = 0.9
-    label_bias: float = -1.8
+    label_risk_weight: float = 0.5
+    label_incident_weight: float = 1.4
+    label_bias: float = -3.2
     feature_window_days: float = 90.0
 
-    # Post-outcome contamination of slowly changing dimensions.
-    post_assessment_label_shift: float = 1.5
-    correction_prob_positive: float = 0.7
+    # Post-outcome contamination of slowly changing dimensions. Corrections
+    # fire for a minority of positives and, wrongly, for a few negatives, so
+    # the corrected status is evidence about the outcome rather than a copy
+    # of it. The first committed world set the positive rate at 0.7 with no
+    # false corrections, and E2 convicted it: one feature carried the whole
+    # gap, which is a planted answer key, not a leak.
+    post_assessment_label_shift: float = 1.2
+    correction_prob_positive: float = 0.35
+    correction_prob_negative: float = 0.04
     correction_backdate_max: float = 10.0
 
     delays: DelayConfig = field(default_factory=DelayConfig)
