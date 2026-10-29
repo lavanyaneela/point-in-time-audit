@@ -1,0 +1,54 @@
+{
+  "auc_by_policy": {
+    "fact_only": [
+      0.900215,
+      0.885277,
+      0.904244,
+      0.888918,
+      0.877772
+    ],
+    "latest": [
+      0.949446,
+      0.952502,
+      0.943941,
+      0.936737,
+      0.945684
+    ],
+    "point_in_time": [
+      0.758956,
+      0.768679,
+      0.787076,
+      0.772201,
+      0.746843
+    ]
+  },
+  "auc_mean": {
+    "fact_only": 0.8913,
+    "latest": 0.9457,
+    "point_in_time": 0.7668
+  },
+  "entities_total": 3000,
+  "events_total": 119540,
+  "gap_fact_only_pp": [
+    14.1259,
+    11.6598,
+    11.7168,
+    11.6717,
+    13.0929
+  ],
+  "gap_fact_only_pp_max": 14.13,
+  "gap_fact_only_pp_mean": 12.45,
+  "gap_fact_only_pp_min": 11.66,
+  "gap_latest_pp": [
+    19.049,
+    18.3823,
+    15.6865,
+    16.4536,
+    19.8841
+  ],
+  "gap_latest_pp_mean": 17.89,
+  "generator_config_sha256": "636c51a52291751892510c48453be0cf36226ebbc2a2fc4fef07716970989221",
+  "positives_total": 589,
+  "referee": "spark and duckdb builds compared value for value before any fit",
+  "seeds": 5
+}

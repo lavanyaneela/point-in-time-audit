@@ -1,0 +1,64 @@
+{
+  "features_total": 7,
+  "generator_config_sha256": "636c51a52291751892510c48453be0cf36226ebbc2a2fc4fef07716970989221",
+  "interaction_note": "the sum of single-feature swaps exceeds the joint gap because the leaking features are redundant evidence about the same incidents; the difference is interaction, not error",
+  "joint_gap_pp": 12.45,
+  "leaking_features": 3,
+  "naive_policy": "fact_only",
+  "per_feature": {
+    "activity_amount_sum_30d": {
+      "fabricated_auc_pp_max": 0.0823,
+      "fabricated_auc_pp_mean": -0.1716,
+      "fabricated_auc_pp_min": -0.4889,
+      "rows_changed": 68
+    },
+    "activity_count_30d": {
+      "fabricated_auc_pp_max": 0.1105,
+      "fabricated_auc_pp_mean": -0.0406,
+      "fabricated_auc_pp_min": -0.2115,
+      "rows_changed": 68
+    },
+    "days_since_last_activity": {
+      "fabricated_auc_pp_max": 0.0669,
+      "fabricated_auc_pp_mean": -0.6918,
+      "fabricated_auc_pp_min": -1.183,
+      "rows_changed": 68
+    },
+    "incident_count_90d": {
+      "fabricated_auc_pp_max": 12.8151,
+      "fabricated_auc_pp_mean": 10.4656,
+      "fabricated_auc_pp_min": 8.1722,
+      "rows_changed": 1120
+    },
+    "incident_severity_max_90d": {
+      "fabricated_auc_pp_max": 8.9206,
+      "fabricated_auc_pp_mean": 7.7109,
+      "fabricated_auc_pp_min": 6.0081,
+      "rows_changed": 1010
+    },
+    "last_risk_score": {
+      "fabricated_auc_pp_max": 0.2755,
+      "fabricated_auc_pp_mean": -0.4232,
+      "fabricated_auc_pp_min": -0.9195,
+      "rows_changed": 623
+    },
+    "status_risky": {
+      "fabricated_auc_pp_max": 4.9249,
+      "fabricated_auc_pp_mean": 3.9515,
+      "fabricated_auc_pp_min": 2.9924,
+      "rows_changed": 298
+    }
+  },
+  "ranking": [
+    "incident_count_90d",
+    "incident_severity_max_90d",
+    "status_risky",
+    "activity_count_30d",
+    "activity_amount_sum_30d",
+    "last_risk_score",
+    "days_since_last_activity"
+  ],
+  "sum_of_parts_pp": 20.8,
+  "worst_feature_name": "incident_count_90d",
+  "worst_feature_pp": 10.47
+}

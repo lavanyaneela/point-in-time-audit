@@ -1,0 +1,75 @@
+{
+  "audit_queries": {
+    "arrival_delay_deciles": {
+      "bigquery": {
+        "parses": true,
+        "rows_match_native": true
+      },
+      "snowflake": {
+        "parses": true,
+        "rows_match_native": true
+      },
+      "spark": {
+        "parses": true
+      }
+    },
+    "backdated_corrections": {
+      "bigquery": {
+        "parses": true,
+        "rows_match_native": true
+      },
+      "snowflake": {
+        "parses": true,
+        "rows_match_native": true
+      },
+      "spark": {
+        "parses": true
+      }
+    },
+    "feature_visibility_diff": {
+      "bigquery": {
+        "parses": true,
+        "rows_match_native": true
+      },
+      "snowflake": {
+        "parses": true,
+        "rows_match_native": true
+      },
+      "spark": {
+        "parses": true
+      }
+    },
+    "leak_candidates": {
+      "bigquery": {
+        "parses": true,
+        "rows_match_native": true
+      },
+      "snowflake": {
+        "parses": true,
+        "rows_match_native": true
+      },
+      "spark": {
+        "parses": true
+      }
+    }
+  },
+  "boundary": "snowflake and bigquery texts parse under their own grammars and execute by transpilation onto duckdb; the hosted warehouses are not contacted",
+  "dialects_agreeing": 3,
+  "dialects_compared": 3,
+  "feature_build": {
+    "bigquery": {
+      "feature_rows_match_reference": true,
+      "parses": true
+    },
+    "snowflake": {
+      "feature_rows_match_reference": true,
+      "parses": true
+    },
+    "spark": {
+      "feature_rows_match_reference": true,
+      "parses": true
+    }
+  },
+  "generator_config_sha256": "636c51a52291751892510c48453be0cf36226ebbc2a2fc4fef07716970989221",
+  "reference": "duckdb engine build of the point_in_time feature table"
+}

@@ -1,0 +1,389 @@
+{
+  "clean_cases": 7,
+  "clean_false_positives": 0,
+  "clean_flagged_cases": 2,
+  "clean_flagged_flagged": 2,
+  "corpus_cases_total": 36,
+  "crossover_intermediate_share": 0.5,
+  "crossover_intermediate_share_pct": 50.0,
+  "direct_cases": 18,
+  "direct_catch_pct": 100.0,
+  "direct_catch_rate": 1.0,
+  "direct_hits": 18,
+  "generator_config_sha256": "636c51a52291751892510c48453be0cf36226ebbc2a2fc4fef07716970989221",
+  "leak_cases_detected": 18,
+  "leak_cases_total": 25,
+  "overall_catch_pct": 72.0,
+  "per_case": [
+    {
+      "class": "no_time_predicate",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "no_time_predicate/join_on_entity_only.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "no_time_predicate",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "no_time_predicate/comma_join_where_entity.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "no_time_predicate",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "no_time_predicate/left_join_aggregate.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "no_time_predicate",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "no_time_predicate/second_event_source.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "fact_only_predicate",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "fact_only_predicate/classic_on_clause.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "fact_only_predicate",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "fact_only_predicate/where_clause.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "fact_only_predicate",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "fact_only_predicate/window_both_bounds.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "fact_only_predicate",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "fact_only_predicate/reversed_operands.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "fact_only_predicate",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "fact_only_predicate/second_source_columns.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "wrong_comparand",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "wrong_comparand/current_timestamp.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "wrong_comparand",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "wrong_comparand/literal_date.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "wrong_comparand",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "wrong_comparand/own_fact_time.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "wrong_comparand",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "wrong_comparand/wrong_prediction_column.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "udf_wrapped",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "udf_wrapped/is_recent.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "udf_wrapped",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "udf_wrapped/visibility_helper.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "udf_wrapped",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "udf_wrapped/between_shape.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "clean",
+      "exit_code": 0,
+      "expectation": "clean",
+      "file": "clean/direct_join_on.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "clean",
+      "exit_code": 0,
+      "expectation": "clean",
+      "file": "clean/where_both.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "clean",
+      "exit_code": 0,
+      "expectation": "clean",
+      "file": "clean/reversed_operands.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "clean",
+      "exit_code": 0,
+      "expectation": "clean",
+      "file": "clean/window_plus_arrival.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "clean",
+      "exit_code": 0,
+      "expectation": "clean",
+      "file": "clean/strict_inequality.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "clean",
+      "exit_code": 0,
+      "expectation": "clean",
+      "file": "clean/two_sources_both_correct.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "clean_flagged",
+      "exit_code": 1,
+      "expectation": "clean",
+      "file": "clean_flagged/udf_correct.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "clean_flagged",
+      "exit_code": 1,
+      "expectation": "clean",
+      "file": "clean_flagged/case_wrapped.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "intermediate_table",
+      "exit_code": 0,
+      "expectation": "leak",
+      "file": "intermediate_table/ctas_then_join.sql",
+      "uncertified_relays": 1
+    },
+    {
+      "class": "intermediate_table",
+      "exit_code": 0,
+      "expectation": "leak",
+      "file": "intermediate_table/insert_then_join.sql",
+      "uncertified_relays": 1
+    },
+    {
+      "class": "intermediate_table",
+      "exit_code": 0,
+      "expectation": "leak",
+      "file": "intermediate_table/two_hops.sql",
+      "uncertified_relays": 1
+    },
+    {
+      "class": "cte_relay",
+      "exit_code": 0,
+      "expectation": "leak",
+      "file": "cte_relay/simple_cte.sql",
+      "uncertified_relays": 1
+    },
+    {
+      "class": "cte_relay",
+      "exit_code": 0,
+      "expectation": "leak",
+      "file": "cte_relay/inline_subquery.sql",
+      "uncertified_relays": 1
+    },
+    {
+      "class": "cte_relay",
+      "exit_code": 0,
+      "expectation": "leak",
+      "file": "cte_relay/nested_ctes.sql",
+      "uncertified_relays": 1
+    },
+    {
+      "class": "refusal",
+      "exit_code": 2,
+      "expectation": "refused",
+      "file": "refusal/single_timestamp_table.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "refusal",
+      "exit_code": 2,
+      "expectation": "refused",
+      "file": "refusal/unregistered_table.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "refusal",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "refusal/leak_beats_refusal.sql",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "missing_sensor",
+      "exit_code": 1,
+      "expectation": "leak",
+      "file": "dags/missing_sensor.py",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "sensor_present",
+      "exit_code": 0,
+      "expectation": "clean",
+      "file": "dags/with_sensor.py",
+      "uncertified_relays": 0
+    },
+    {
+      "class": "wrong_sensor_semantics",
+      "exit_code": 0,
+      "expectation": "leak",
+      "file": "dags/wrong_sensor_semantics.py",
+      "uncertified_relays": 0
+    }
+  ],
+  "per_class": {
+    "clean": {
+      "cases": 6,
+      "clean_passes": 6,
+      "detectable_by_declaration": true,
+      "detection_rate": 0.0,
+      "grain": "sql",
+      "leak_findings": 0,
+      "refusals": 0
+    },
+    "clean_flagged": {
+      "cases": 2,
+      "clean_passes": 0,
+      "detectable_by_declaration": true,
+      "detection_rate": 1.0,
+      "grain": "sql",
+      "leak_findings": 2,
+      "refusals": 0
+    },
+    "cte_relay": {
+      "cases": 3,
+      "clean_passes": 3,
+      "detectable_by_declaration": false,
+      "detection_rate": 0.0,
+      "grain": "sql",
+      "leak_findings": 0,
+      "refusals": 0
+    },
+    "fact_only_predicate": {
+      "cases": 5,
+      "clean_passes": 0,
+      "detectable_by_declaration": true,
+      "detection_rate": 1.0,
+      "grain": "sql",
+      "leak_findings": 5,
+      "refusals": 0
+    },
+    "intermediate_table": {
+      "cases": 3,
+      "clean_passes": 3,
+      "detectable_by_declaration": false,
+      "detection_rate": 0.0,
+      "grain": "sql",
+      "leak_findings": 0,
+      "refusals": 0
+    },
+    "missing_sensor": {
+      "cases": 1,
+      "clean_passes": 0,
+      "detectable_by_declaration": true,
+      "detection_rate": 1.0,
+      "grain": "dag",
+      "leak_findings": 1,
+      "refusals": 0
+    },
+    "no_time_predicate": {
+      "cases": 4,
+      "clean_passes": 0,
+      "detectable_by_declaration": true,
+      "detection_rate": 1.0,
+      "grain": "sql",
+      "leak_findings": 4,
+      "refusals": 0
+    },
+    "refusal": {
+      "cases": 3,
+      "clean_passes": 0,
+      "detectable_by_declaration": true,
+      "detection_rate": 0.3333,
+      "grain": "sql",
+      "leak_findings": 1,
+      "refusals": 2
+    },
+    "sensor_present": {
+      "cases": 1,
+      "clean_passes": 1,
+      "detectable_by_declaration": true,
+      "detection_rate": 0.0,
+      "grain": "dag",
+      "leak_findings": 0,
+      "refusals": 0
+    },
+    "udf_wrapped": {
+      "cases": 3,
+      "clean_passes": 0,
+      "detectable_by_declaration": true,
+      "detection_rate": 1.0,
+      "grain": "sql",
+      "leak_findings": 3,
+      "refusals": 0
+    },
+    "wrong_comparand": {
+      "cases": 4,
+      "clean_passes": 0,
+      "detectable_by_declaration": true,
+      "detection_rate": 1.0,
+      "grain": "sql",
+      "leak_findings": 4,
+      "refusals": 0
+    },
+    "wrong_sensor_semantics": {
+      "cases": 1,
+      "clean_passes": 1,
+      "detectable_by_declaration": false,
+      "detection_rate": 0.0,
+      "grain": "dag",
+      "leak_findings": 0,
+      "refusals": 0
+    }
+  },
+  "refusal_cases_refused": 2,
+  "undetectable_classes": [
+    "cte_relay",
+    "intermediate_table",
+    "wrong_sensor_semantics"
+  ],
+  "undetectable_classes_total": 3,
+  "undetected_cases": 7
+}
