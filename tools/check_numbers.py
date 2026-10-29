@@ -30,7 +30,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 METRICS_PATH = REPO / "docs" / "metrics.json"
 
-NUMBER_SLOT = r"(?<![\w.])(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)(?![\w.])"
+NUMBER_SLOT = r"(?<![\w.-])(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)(?![\w.])"
 TEXT_SLOT = r"([\w][\w./-]*)"
 ISO_DATE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
 ORDERED_LIST = re.compile(r"^(\s*)\d+\.\s", re.MULTILINE)
@@ -44,10 +44,9 @@ HTML_TAG = re.compile(r"<[^>\n]+>")
 EXEMPTIONS: dict[str, str] = {
     "86400": "seconds in a day, the conversion constant the UTC pin relies on",
     "30": "the activity window and the default incident delay median, in days",
-    "90": "the incident feature window, in days",
     "60": "the top of the E4 delay sweep, in days",
     "95": "the confidence level of the exact binomial bound, in percent",
-    "2025": "the fixture epoch year and the spring forward date's year",
+    "3.11": "the minimum Python version in the quickstart",
     "26": "minutes inside the lost hour for the first affected event",
 }
 

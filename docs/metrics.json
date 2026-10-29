@@ -1,0 +1,203 @@
+{
+  "anchors": {
+    "auc_fact_only": [
+      "reads {}",
+      "an AUC of {}",
+      "| fact time only | `fact_time <= prediction_time` | {} |"
+    ],
+    "auc_latest": [
+      "latest-value join scores {}",
+      "| latest value | none | {} |"
+    ],
+    "auc_point_in_time": [
+      "honest AUC is {}",
+      "| point in time | `fact_time <= prediction_time AND arrival_time <= prediction_time` | {} |"
+    ],
+    "clean_cases": [
+      "{} clean cases"
+    ],
+    "clean_false_positives": [
+      "{} false positives"
+    ],
+    "clean_flagged_cases": [
+      "{} correct predicates",
+      "flags {} semantically"
+    ],
+    "clean_fp_upper_pct": [
+      "below {}% at 95"
+    ],
+    "corpus_cases_total": [
+      "{} corpus cases"
+    ],
+    "coverage_line_pct": [
+      "{}% line coverage"
+    ],
+    "crossover_share_pct": [
+      "crossover sits at {}%",
+      "past {}% of temporal"
+    ],
+    "dialects_agreeing": [
+      "{} of 3 dialects"
+    ],
+    "direct_cases": [
+      "all {} direct"
+    ],
+    "direct_catch_pct": [
+      "{}% of direct joins"
+    ],
+    "dst_entities_affected": [
+      "clips {} windows"
+    ],
+    "dst_first_entity": [
+      "entity {} loses",
+      "entity {} alone"
+    ],
+    "dst_lost_value": [
+      "worth {} of summed"
+    ],
+    "entities_total": [
+      "{} entities"
+    ],
+    "events_total": [
+      "{} events"
+    ],
+    "feature_severity_pp": [
+      "| incident_severity_max_90d | +{} |"
+    ],
+    "feature_status_pp": [
+      "| status_risky | +{} |"
+    ],
+    "features_total": [
+      "{} features"
+    ],
+    "gap_at_seven_delay_pp": [
+      "| 7 | {} |"
+    ],
+    "gap_at_sixty_delay_pp": [
+      "climbs to {}",
+      "climb to {}",
+      "| 60 | {} |"
+    ],
+    "gap_at_zero_delay_pp": [
+      "{} points remain",
+      "{} points at zero",
+      "from {} to a",
+      "| 0 | {} |"
+    ],
+    "gap_fact_only_pp_max": [
+      "to {} points across",
+      "points to {}"
+    ],
+    "gap_fact_only_pp_mean": [
+      "{} points of held-out AUC",
+      "{} points of AUC",
+      "joint gap of {}",
+      "the {} joint gap"
+    ],
+    "gap_fact_only_pp_min": [
+      "never below {} points"
+    ],
+    "gap_latest_pp_mean": [
+      "fabricates {} points"
+    ],
+    "leak_cases_detected": [
+      "names {} of"
+    ],
+    "leak_cases_total": [
+      "the {} leak cases"
+    ],
+    "leaking_features": [
+      "{} of them leak"
+    ],
+    "overall_catch_pct": [
+      "catches {}% of the corpus"
+    ],
+    "positives_total": [
+      "{} positive outcomes"
+    ],
+    "seeds": [
+      "{} paired splits",
+      "{} seeds",
+      "all {} seeds"
+    ],
+    "sql_files_total": [
+      "{} committed SQL files"
+    ],
+    "sum_of_parts_pp": [
+      "parts sum to {}"
+    ],
+    "tests_total": [
+      "{} tests"
+    ],
+    "undetectable_classes_total": [
+      "{} leak classes",
+      "{} structurally invisible",
+      "{} classes it cannot"
+    ],
+    "undetected_cases": [
+      "{} leak cases invisible",
+      "misses {} cases"
+    ],
+    "worst_feature_name": [
+      "worst offender is {}"
+    ],
+    "worst_feature_pp": [
+      "{} points by itself",
+      "| incident_count_90d | +{} |"
+    ]
+  },
+  "checked_documents": [
+    "README.md",
+    "docs/defense-guide.md",
+    "docs/failure-modes.md",
+    "docs/adr/ADR-001-seeded-generator.md",
+    "docs/adr/ADR-002-two-engines-as-referees.md",
+    "docs/adr/ADR-003-airflow-validated-not-executed.md",
+    "docs/adr/ADR-004-analyzer-scope.md",
+    "docs/adr/ADR-005-chosen-delays-and-the-boundary.md"
+  ],
+  "metrics": {
+    "auc_fact_only": 0.8913,
+    "auc_latest": 0.9457,
+    "auc_point_in_time": 0.7668,
+    "clean_cases": 7,
+    "clean_false_positives": 0,
+    "clean_flagged_cases": 2,
+    "clean_fp_upper_pct": 34.8,
+    "corpus_cases_total": 36,
+    "coverage_line_pct": 98.7,
+    "crossover_share_pct": 50.0,
+    "dialects_agreeing": 3,
+    "direct_cases": 18,
+    "direct_catch_pct": 100.0,
+    "dst_entities_affected": 20,
+    "dst_first_entity": 139,
+    "dst_lost_value": 16.59965,
+    "entities_total": 3000,
+    "events_total": 119540,
+    "feature_severity_pp": 7.71,
+    "feature_status_pp": 3.95,
+    "features_total": 7,
+    "gap_at_seven_delay_pp": 5.93,
+    "gap_at_sixty_delay_pp": 15.26,
+    "gap_at_zero_delay_pp": 3.66,
+    "gap_fact_only_pp_max": 14.13,
+    "gap_fact_only_pp_mean": 12.45,
+    "gap_fact_only_pp_min": 11.66,
+    "gap_latest_pp_mean": 17.89,
+    "leak_cases_detected": 18,
+    "leak_cases_total": 25,
+    "leaking_features": 3,
+    "overall_catch_pct": 72.0,
+    "positives_total": 589,
+    "seeds": 5,
+    "sql_files_total": 28,
+    "sum_of_parts_pp": 20.8,
+    "tests_total": 233,
+    "undetectable_classes_total": 3,
+    "undetected_cases": 7,
+    "worst_feature_name": "incident_count_90d",
+    "worst_feature_pp": 10.47
+  },
+  "note": "every value here is produced by running the suite, the experiments and the daylight saving reconstruction; nothing is typed by hand"
+}

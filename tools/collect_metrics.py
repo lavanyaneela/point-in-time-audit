@@ -46,6 +46,76 @@ CHECKED_DOCUMENTS = [
 ]
 
 
+
+# The exact wording the documents use, one entry per published phrasing.
+# Every anchor must appear in at least one checked document (the liveness
+# gate) and no two metrics may share one, even by containment.
+ANCHORS = {
+    "tests_total": ["{} tests"],
+    "coverage_line_pct": ["{}% line coverage"],
+    "events_total": ["{} events"],
+    "entities_total": ["{} entities"],
+    "positives_total": ["{} positive outcomes"],
+    "seeds": ["{} paired splits", "{} seeds", "all {} seeds"],
+    "auc_point_in_time": [
+        "honest AUC is {}",
+        "| point in time | `fact_time <= prediction_time AND arrival_time <= prediction_time` | {} |",
+    ],
+    "auc_fact_only": [
+        "reads {}",
+        "an AUC of {}",
+        "| fact time only | `fact_time <= prediction_time` | {} |",
+    ],
+    "auc_latest": ["latest-value join scores {}", "| latest value | none | {} |"],
+    "gap_fact_only_pp_mean": [
+        "{} points of held-out AUC",
+        "{} points of AUC",
+        "joint gap of {}",
+        "the {} joint gap",
+    ],
+    "gap_fact_only_pp_min": ["never below {} points"],
+    "gap_fact_only_pp_max": ["to {} points across", "points to {}"],
+    "gap_latest_pp_mean": ["fabricates {} points"],
+    "features_total": ["{} features"],
+    "leaking_features": ["{} of them leak"],
+    "worst_feature_name": ["worst offender is {}"],
+    "worst_feature_pp": ["{} points by itself", "| incident_count_90d | +{} |"],
+    "feature_severity_pp": ["| incident_severity_max_90d | +{} |"],
+    "feature_status_pp": ["| status_risky | +{} |"],
+    "sum_of_parts_pp": ["parts sum to {}"],
+    "corpus_cases_total": ["{} corpus cases"],
+    "leak_cases_total": ["the {} leak cases"],
+    "leak_cases_detected": ["names {} of"],
+    "overall_catch_pct": ["catches {}% of the corpus"],
+    "direct_catch_pct": ["{}% of direct joins"],
+    "direct_cases": ["all {} direct"],
+    "undetectable_classes_total": [
+        "{} leak classes",
+        "{} structurally invisible",
+        "{} classes it cannot",
+    ],
+    "undetected_cases": ["{} leak cases invisible", "misses {} cases"],
+    "clean_cases": ["{} clean cases"],
+    "clean_false_positives": ["{} false positives"],
+    "clean_fp_upper_pct": ["below {}% at 95"],
+    "clean_flagged_cases": ["{} correct predicates", "flags {} semantically"],
+    "crossover_share_pct": ["crossover sits at {}%", "past {}% of temporal"],
+    "gap_at_zero_delay_pp": [
+        "{} points remain",
+        "{} points at zero",
+        "from {} to a",
+        "| 0 | {} |",
+    ],
+    "gap_at_seven_delay_pp": ["| 7 | {} |"],
+    "gap_at_sixty_delay_pp": ["climbs to {}", "climb to {}", "| 60 | {} |"],
+    "dialects_agreeing": ["{} of 3 dialects"],
+    "sql_files_total": ["{} committed SQL files"],
+    "dst_entities_affected": ["clips {} windows"],
+    "dst_first_entity": ["entity {} loses", "entity {} alone"],
+    "dst_lost_value": ["worth {} of summed"],
+}
+
+
 def floor_to(value: float, decimals: int) -> float:
     scale = 10**decimals
     return math.floor(value * scale) / scale
@@ -88,7 +158,6 @@ def measure_dst_story() -> dict:
     """Re-measure the daylight saving miss: the fixed UTC session against a
     reconstructed America/New_York session, on the committed fixture."""
     import duckdb
-    import numpy as np
 
     from point_in_time_audit.config import GeneratorConfig
     from point_in_time_audit.dialects.emit import emit_feature_sql
@@ -167,6 +236,12 @@ def main() -> int:
         "leaking_features": e2["leaking_features"],
         "worst_feature_name": e2["worst_feature_name"],
         "worst_feature_pp": e2["worst_feature_pp"],
+        "feature_severity_pp": round(
+            e2["per_feature"]["incident_severity_max_90d"]["fabricated_auc_pp_mean"], 2
+        ),
+        "feature_status_pp": round(
+            e2["per_feature"]["status_risky"]["fabricated_auc_pp_mean"], 2
+        ),
         "sum_of_parts_pp": e2["sum_of_parts_pp"],
         "corpus_cases_total": e3["corpus_cases_total"],
         "leak_cases_total": e3["leak_cases_total"],
@@ -184,60 +259,16 @@ def main() -> int:
         "clean_flagged_cases": e3["clean_flagged_cases"],
         "crossover_share_pct": e3["crossover_intermediate_share_pct"],
         "gap_at_zero_delay_pp": e4["gap_at_zero_delay_pp"],
+        "gap_at_seven_delay_pp": next(
+            p["gap_pp_mean"] for p in e4["points"] if p["incident_delay_median_days"] == 7.0
+        ),
         "gap_at_sixty_delay_pp": gap_sixty,
         "dialects_agreeing": e5["dialects_agreeing"],
         "sql_files_total": len(list((REPO / "sql").rglob("*.sql"))),
         **dst,
     }
 
-    anchors = {
-        "tests_total": ["{} tests"],
-        "coverage_line_pct": ["{}% line coverage", "{} percent line coverage"],
-        "events_total": ["{} events"],
-        "entities_total": ["{} entities", "over {} entities"],
-        "positives_total": ["{} positive outcomes"],
-        "seeds": ["{} paired splits", "{} seeds", "all {} seeds"],
-        "auc_point_in_time": ["honest AUC is {}", "point-in-time AUC of {}", "AUC {} once"],
-        "auc_fact_only": ["an AUC of {}", "reads {}"],
-        "auc_latest": ["latest-value join scores {}"],
-        "gap_fact_only_pp_mean": [
-            "{} points of held-out AUC",
-            "{} points of AUC",
-            "{} points once",
-        ],
-        "gap_fact_only_pp_min": ["never below {} points", "from {} to"],
-        "gap_fact_only_pp_max": ["to {} points across"],
-        "gap_latest_pp_mean": ["fabricates {} points"],
-        "features_total": ["{} features"],
-        "leaking_features": ["{} of them leak"],
-        "worst_feature_name": ["worst offender is {}", "offender, {},"],
-        "worst_feature_pp": ["{} points by itself"],
-        "sum_of_parts_pp": ["parts sum to {}"],
-        "corpus_cases_total": ["{} corpus cases"],
-        "leak_cases_total": ["of {} leak cases", "the {} leak cases"],
-        "leak_cases_detected": ["names {} of"],
-        "overall_catch_pct": ["catches {}% of the corpus"],
-        "direct_catch_pct": ["{}% of direct joins", "{}% on direct"],
-        "direct_cases": ["all {} direct"],
-        "undetectable_classes_total": [
-            "{} leak classes",
-            "{} classes it cannot",
-            "{} structurally invisible",
-        ],
-        "undetected_cases": ["{} leak cases invisible", "misses {} cases"],
-        "clean_cases": ["{} clean cases", "of {} clean"],
-        "clean_false_positives": ["{} false positives"],
-        "clean_fp_upper_pct": ["below {}% at 95"],
-        "clean_flagged_cases": ["{} correct predicates", "flags {} semantically"],
-        "crossover_share_pct": ["crossover sits at {}%", "past {}% of temporal"],
-        "gap_at_zero_delay_pp": ["{} points remain", "{} points survive"],
-        "gap_at_sixty_delay_pp": ["{} points at a", "climbs to {}"],
-        "dialects_agreeing": ["{} of 3 dialects"],
-        "sql_files_total": ["{} committed SQL files"],
-        "dst_entities_affected": ["windows of {} entities", "for {} entities"],
-        "dst_first_entity": ["entity {} loses", "entity {} alone"],
-        "dst_lost_value": ["worth {} of summed"],
-    }
+    anchors = ANCHORS
 
     missing = [name for name in metrics if name not in anchors]
     if missing:
