@@ -11,4 +11,4 @@ only in which timestamps they respect, and a static analyzer that flags SQL
 which cannot be respecting both because it never mentions the second one.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.3.0"
