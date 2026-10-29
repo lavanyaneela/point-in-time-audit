@@ -1,0 +1,15 @@
+# Count the SQL, workflow and DAG surface in the language bar. The SQL in this
+# repository is a deliverable, not generated noise, so it should be visible.
+*.sql linguist-detectable=true
+*.yml linguist-detectable=true
+*.yaml linguist-detectable=true
+
+# Committed measurements are data, not source.
+fixtures/** linguist-vendored=false
+docs/experiments/*.json linguist-documentation=true
+
+# Normalise line endings so the fixture manifest hashes are stable everywhere.
+* text=auto eol=lf
+*.parquet binary
+*.png binary
+*.svg text

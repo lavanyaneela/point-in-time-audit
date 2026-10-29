@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.json
+coverage.xml
+htmlcov/
+junit.xml
+
+# Spark and notebooks
+spark-warehouse/
+metastore_db/
+derby.log
+.ipynb_checkpoints/
+
+# Node, never again (see replay-gap postmortem)
+node_modules/
+
+# Editor noise
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Scratch output that is not a committed measurement
+/tmp/
+scratch/
