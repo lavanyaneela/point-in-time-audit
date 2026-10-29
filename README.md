@@ -2,8 +2,8 @@
 
 **Finds training features that were not knowable at prediction time, measures the AUC they fabricate, and refuses, with its own exit code, when the schema cannot even pose the question.**
 
-[![CI](https://github.com/GITHUB_USERNAME/point-in-time-audit/actions/workflows/ci.yml/badge.svg)](https://github.com/GITHUB_USERNAME/point-in-time-audit/actions/workflows/ci.yml)
-[![coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/GITHUB_USERNAME/point-in-time-audit/gh-pages/coverage.json)](https://github.com/GITHUB_USERNAME/point-in-time-audit/actions/workflows/ci.yml)
+[![CI](https://github.com/lavanyaneela/point-in-time-audit/actions/workflows/ci.yml/badge.svg)](https://github.com/lavanyaneela/point-in-time-audit/actions/workflows/ci.yml)
+[![coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/lavanyaneela/point-in-time-audit/gh-pages/coverage.json)](https://github.com/lavanyaneela/point-in-time-audit/actions/workflows/ci.yml)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## The contract this repository is about
