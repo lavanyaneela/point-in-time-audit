@@ -156,16 +156,13 @@ jobs:
     continue-on-error: true
     services:
       kafka:
-        image: bitnami/kafka:3.7
+        # The official single node image needs no configuration: KRaft,
+        # PLAINTEXT on 9092, advertised as localhost, which is exactly the
+        # service container shape. The first cut used a configured bitnami
+        # image whose container never came healthy on the runner.
+        image: apache/kafka:3.8.1
         ports:
           - 9092:9092
-        env:
-          KAFKA_CFG_NODE_ID: "0"
-          KAFKA_CFG_PROCESS_ROLES: controller,broker
-          KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@localhost:9093
-          KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
-          KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-          KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -173,6 +170,14 @@ jobs:
           python-version: "3.12"
       - name: Install with the kafka extra
         run: pip install -e ".[dev,kafka]"
+      - name: Wait for the broker to accept connections
+        run: |
+          for i in $(seq 1 60); do
+            (exec 3<>/dev/tcp/localhost/9092) 2>/dev/null && exec 3>&- && exit 0
+            sleep 1
+          done
+          echo "broker never opened 9092" >&2
+          exit 1
       - name: Round trip the fixture through the broker
         env:
           PIT_KAFKA_BOOTSTRAP: localhost:9092
@@ -189,10 +194,24 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install with the airflow extra
+      - name: Install Airflow alone, under its constraints
+        # The DAG's only module level imports are Airflow's, by design, so
+        # the loader check needs no other package. The first cut installed
+        # this repository's dependencies first and Airflow's constraint
+        # file then conflicted with them; the two sets never needed to meet.
         run: |
-          pip install -e ".[dev]"
           pip install "apache-airflow==2.10.5" \
             --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.10.5/constraints-3.11.txt"
       - name: The DAG imports under a real loader
-        run: python -m pytest tests/test_dag_analyzer.py -m airflow -q
+        env:
+          AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+        run: |
+          export AIRFLOW_HOME="$RUNNER_TEMP/airflow"
+          python - <<'EOF'
+          from airflow.models import DagBag
+
+          bag = DagBag(dag_folder="dags", include_examples=False)
+          assert not bag.import_errors, bag.import_errors
+          assert "point_in_time_feature_pipeline" in bag.dags
+          print("DAG imported cleanly under a real loader")
+          EOF
