@@ -30,6 +30,14 @@ def build_features_duckdb(events: pd.DataFrame, predictions: pd.DataFrame, polic
     con = duckdb.connect()
     try:
         con.execute("SET threads TO 1")
+        # INTERVAL arithmetic on TIMESTAMPTZ is calendar arithmetic in the
+        # session timezone. Left at the runner's local zone, a 30 day window
+        # whose span crosses a daylight saving transition is an hour short,
+        # and this engine silently dropped events in that hour until the
+        # referee pair disagreed. Pinned to UTC, where a day is 86400 seconds
+        # every day of the year. See docs/failure-modes.md and the test that
+        # reconstructs the miss.
+        con.execute("SET TimeZone = 'UTC'")
         con.register("events", events)
         con.register("predictions", predictions)
         sql = emit_feature_sql("duckdb", policy)
