@@ -47,7 +47,6 @@ EXEMPTIONS: dict[str, str] = {
     "60": "the top of the E4 delay sweep, in days",
     "95": "the confidence level of the exact binomial bound, in percent",
     "3.11": "the minimum Python version in the quickstart",
-    "26": "minutes inside the lost hour for the first affected event",
 }
 
 

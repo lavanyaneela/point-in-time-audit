@@ -8,8 +8,10 @@ file was invisible to the sweep until committed and then failed the next
 clone). Fenced blocks are included: a duration in a demo capture is still
 a duration a reader will quote.
 
-The one allowed phrase is the conversion constant, because "a day is 86400
-seconds" is arithmetic, not a measurement.
+The allowed phrases are the conversion constant ("a day is 86400 seconds"
+is arithmetic, not a measurement), the position of an event inside the lost
+daylight saving hour (a measured world property, guarded by its own anchor
+in the receipts), and the sensor's poke interval (configuration).
 """
 
 from __future__ import annotations
@@ -25,7 +27,7 @@ DURATION = re.compile(
     r"\b\d[\d.,]*\s?(?:ms\b|msec|millisecond|microsecond|\bs\b(?!-)|second|minute|hour)",
     re.IGNORECASE,
 )
-ALLOWED = ("86400 seconds", "26 minutes", "one hour", "poke_interval")
+ALLOWED = ("86400 seconds", "minutes inside", "poke_interval")
 
 
 def tracked_and_untracked_markdown() -> list[Path]:

@@ -90,6 +90,15 @@ def main() -> int:
         per_class["clean"]["leak_findings"] + per_class["sensor_present"]["leak_findings"]
     )
     flagged_correct = per_class["clean_flagged"]["leak_findings"]
+    # Every case whose ground truth says a perfect gate passes it, the
+    # declared precision cost included. Publishing the flag rate on this
+    # full denominator, beside the bare-predicate zero, is what keeps the
+    # zero honest: a bound computed on a subset defined as "cases we do
+    # not flag" is not a bound anyone should quote alone.
+    clean_expectation = [c for c in spec["cases"] if c["expectation"] == "clean"]
+    clean_expectation_flags = sum(
+        1 for c in clean_expectation if flagged_by_file[c["file"]]
+    )
 
     direct_catch_rate = round(direct_hits / direct_cases, 4)
     payload = {
@@ -118,6 +127,8 @@ def main() -> int:
         "undetected_cases": missed_cases - missed_hits,
         "clean_cases": clean_cases,
         "clean_false_positives": clean_false_positives,
+        "clean_expectation_cases": len(clean_expectation),
+        "clean_expectation_flags": clean_expectation_flags,
         "clean_flagged_cases": per_class["clean_flagged"]["cases"],
         "clean_flagged_flagged": flagged_correct,
         "refusal_cases_refused": per_class["refusal"]["refusals"],

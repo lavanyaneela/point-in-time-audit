@@ -83,11 +83,13 @@ ANCHORS = {
     "feature_severity_pp": ["| incident_severity_max_90d | +{} |"],
     "feature_status_pp": ["| status_risky | +{} |"],
     "sum_of_parts_pp": ["parts sum to {}"],
+    "leaking_parts_pp": ["alone sum to {}"],
+    "clean_parts_offset_pp": ["subtract {} points"],
     "corpus_cases_total": ["{} corpus cases"],
     "leak_cases_total": ["the {} leak cases"],
     "leak_cases_detected": ["names {} of"],
-    "overall_catch_pct": ["catches {}% of the corpus"],
-    "direct_catch_pct": ["{}% of direct joins"],
+    "overall_catch_pct": ["catches {}% of the corpus leak cases"],
+    "direct_catch_pct": ["{}% of direct sites"],
     "direct_cases": ["all {} direct"],
     "undetectable_classes_total": [
         "{} leak classes",
@@ -97,6 +99,8 @@ ANCHORS = {
     "undetected_cases": ["{} leak cases invisible", "misses {} cases"],
     "clean_cases": ["{} clean cases"],
     "clean_false_positives": ["{} false positives"],
+    "clean_expectation_cases": ["{} cases whose ground"],
+    "clean_expectation_flags": ["flags {} of them"],
     "clean_fp_upper_pct": ["below {}% at 95"],
     "clean_flagged_cases": ["{} correct predicates", "flags {} semantically"],
     "crossover_share_pct": ["crossover sits at {}%", "past {}% of temporal"],
@@ -113,6 +117,7 @@ ANCHORS = {
     "dst_entities_affected": ["clips {} windows"],
     "dst_first_entity": ["entity {} loses", "entity {} alone"],
     "dst_lost_value": ["worth {} of summed"],
+    "dst_minutes_inside": ["{} minutes inside"],
 }
 
 
@@ -187,10 +192,22 @@ def measure_dst_story() -> dict:
     affected = int(differs.fillna(False).sum())
     entity = int(utc.index[differs.fillna(False)][0])
     delta = round(float(utc.loc[entity, column] - broken.loc[entity, column]), 6)
+
+    prediction = fixture.predictions.set_index("entity_id").loc[entity]
+    lower = float(prediction["prediction_days"]) - 30.0
+    lost = fixture.events[
+        (fixture.events["entity_id"] == entity)
+        & (fixture.events["event_type"] == "activity")
+        & (fixture.events["fact_days"] > lower)
+        & (fixture.events["fact_days"] < lower + 1.0 / 24.0)
+        & (fixture.events["arrival_days"] <= float(prediction["prediction_days"]))
+    ].sort_values("fact_days")
+    minutes = round(float((lost.iloc[0]["fact_days"] - lower) * 1440.0), 1)
     return {
         "dst_entities_affected": affected,
         "dst_first_entity": entity,
         "dst_lost_value": delta,
+        "dst_minutes_inside": minutes,
     }
 
 
@@ -243,6 +260,25 @@ def main() -> int:
             e2["per_feature"]["status_risky"]["fabricated_auc_pp_mean"], 2
         ),
         "sum_of_parts_pp": e2["sum_of_parts_pp"],
+        "leaking_parts_pp": round(
+            sum(
+                v["fabricated_auc_pp_mean"]
+                for v in e2["per_feature"].values()
+                if v["fabricated_auc_pp_mean"] >= 1.0
+            ),
+            2,
+        ),
+        "clean_parts_offset_pp": round(
+            abs(
+                e2["sum_of_parts_pp"]
+                - sum(
+                    v["fabricated_auc_pp_mean"]
+                    for v in e2["per_feature"].values()
+                    if v["fabricated_auc_pp_mean"] >= 1.0
+                )
+            ),
+            2,
+        ),
         "corpus_cases_total": e3["corpus_cases_total"],
         "leak_cases_total": e3["leak_cases_total"],
         "leak_cases_detected": e3["leak_cases_detected"],
@@ -253,6 +289,8 @@ def main() -> int:
         "undetected_cases": e3["undetected_cases"],
         "clean_cases": e3["clean_cases"],
         "clean_false_positives": e3["clean_false_positives"],
+        "clean_expectation_cases": e3["clean_expectation_cases"],
+        "clean_expectation_flags": e3["clean_expectation_flags"],
         "clean_fp_upper_pct": exact_binomial_upper_pct(
             e3["clean_false_positives"], e3["clean_cases"]
         ),
